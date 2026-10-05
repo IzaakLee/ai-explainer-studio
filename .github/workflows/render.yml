@@ -4,9 +4,14 @@ on:
   workflow_dispatch:
 
 jobs:
-  render:
-    timeout-minutes: 60
+  render-chunks:
+    name: Render chunk ${{ matrix.chunk }}
     runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        chunk: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -25,12 +30,45 @@ jobs:
       - name: Ensure Remotion browser
         run: npx remotion browser ensure
 
-      - name: Render preview
-        run: npx remotion render src/index.tsx Explainer out/preview.mp4 --concurrency=4 --chrome-mode=headless-shell --x264-preset=faster --log=info
+      - name: Render chunk
+        env:
+          CHUNK: ${{ matrix.chunk }}
+        run: |
+          START=$((CHUNK * 900))
+          END=$((START + 899))
+          if [ "$CHUNK" -eq 10 ]; then END=9899; fi
+          npx remotion render src/index.tsx Explainer "out/chunk-${CHUNK}.mp4" --frames="${START}-${END}" --concurrency=4 --chrome-mode=headless-shell --x264-preset=faster --log=info
 
-      - name: Upload preview
-        if: success()
+      - name: Upload chunk
+        uses: actions/upload-artifact@v4
+        with:
+          name: explainer-chunk-${{ matrix.chunk }}
+          path: out/chunk-${{ matrix.chunk }}.mp4
+          retention-days: 1
+
+  assemble:
+    name: Assemble final video
+    needs: render-chunks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Download chunks
+        uses: actions/download-artifact@v4
+        with:
+          pattern: explainer-chunk-*
+          path: chunks
+          merge-multiple: true
+
+      - name: Assemble MP4
+        run: |
+          for i in $(seq 0 10); do
+            printf "file '%s'\\n" "chunks/chunk-${i}.mp4"
+          done > chunks.txt
+          ffmpeg -y -f concat -safe 0 -i chunks.txt -c copy out.mp4
+
+      - name: Upload final preview
         uses: actions/upload-artifact@v4
         with:
           name: explainer-preview
-          path: out/preview.mp4
+          path: out.mp4
+          retention-days: 7
