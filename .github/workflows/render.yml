@@ -1,0 +1,20 @@
+name: Render explainer
+
+on:
+  workflow_dispatch:
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npx remotion render src/index.tsx Explainer out/preview.mp4
+      - uses: actions/upload-artifact@v4
+        with:
+          name: explainer-preview
+          path: out/preview.mp4
