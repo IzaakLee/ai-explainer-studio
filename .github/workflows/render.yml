@@ -21,6 +21,9 @@ jobs:
       - name: Typecheck
         run: npm run check
 
+      - name: Ensure Remotion browser
+        run: npx remotion browser ensure
+
       - name: Render preview
         run: npx remotion render src/index.tsx Explainer out/preview.mp4 --concurrency=1 --chrome-mode=headless-shell --disallow-parallel-encoding --log=info
 
