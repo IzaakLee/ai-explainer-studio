@@ -12,7 +12,7 @@ jobs:
         with:
           node-version: 20
       - run: npm install
-      - run: npx remotion render src/index.tsx Explainer out/preview.mp4 --concurrency=1 --chrome-mode=chrome-for-testing --gl=swiftshader --log=verbose
+      - run: npx remotion render src/index.tsx Explainer out/preview.mp4 --concurrency=1 --chrome-mode=chrome-for-testing --gl=angle-egl --log=verbose
       - uses: actions/upload-artifact@v4
         with:
           name: explainer-preview
