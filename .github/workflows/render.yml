@@ -61,6 +61,9 @@ jobs:
           path: chunks
           merge-multiple: true
 
+      - name: Install FFmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
       - name: Assemble MP4
         run: |
           for i in $(seq 0 10); do
