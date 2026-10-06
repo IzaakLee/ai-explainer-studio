@@ -96,9 +96,12 @@ jobs:
           pattern: explainer-chunk-*
           path: chunks
           merge-multiple: true
+          run-id: ${{ github.run_id }}
       - name: Assemble MP4
         run: |
           sudo apt-get update && sudo apt-get install -y ffmpeg
+          ls -lah chunks
+          test -f chunks/chunk-0.mp4
           for i in $(seq 0 19); do printf "file 'chunks/chunk-${i}.mp4'\n"; done > chunks.txt
           ffmpeg -y -f concat -safe 0 -i chunks.txt -c copy out.mp4
       - uses: actions/upload-artifact@v4
