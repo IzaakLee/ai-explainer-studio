@@ -94,6 +94,9 @@ jobs:
     permissions:
       actions: read
     steps:
+      - name: Checkout repository for gh run download
+        uses: actions/checkout@v4
+
       - name: Download rendered chunks from this run
         env:
           GH_TOKEN: ${{ github.token }}
