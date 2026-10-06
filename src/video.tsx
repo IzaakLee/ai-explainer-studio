@@ -1,116 +1,91 @@
 import React from 'react';
-import {AbsoluteFill, interpolate, useCurrentFrame} from 'remotion';
+import {AbsoluteFill, Audio, interpolate, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
 
-const C={bg:'#0b1028',deep:'#171744',purple:'#6544a8',orange:'#ff8a3d',gold:'#ffd34f',cyan:'#54e7ef',pink:'#f15a9a',teal:'#45d2b0',cream:'#fff3d2',skin:'#f2b58f',hair:'#b9d9df',coat:'#dce7e5',brown:'#513b46',black:'#05060d',red:'#ff6268',blue:'#7197d8'};
-const cl={extrapolateLeft:'clamp' as const,extrapolateRight:'clamp' as const};
-const I=(f:number,r:[number,number],v:[number,number])=>interpolate(f,r,v,cl);
-const S=(f:number,r:[number,number])=>{const x=I(f,r,[0,1]);return x*x*(3-2*x)};
-const beat=(f:number,a:number,b:number)=>S(f,[a,b]);
+const C={navy:'#0a0b2a',purple:'#37205f',violet:'#7046b8',orange:'#ff7b38',gold:'#ffd34f',cyan:'#55e7ef',pink:'#ee5d9f',red:'#ff4e62',cream:'#fff2c8',black:'#02030a',blue:'#78a8ff',teal:'#49d7b0',skin:'#f1b48e',hair:'#b9e3e9',coat:'#7e8d90',brown:'#5a3d48'};
+const ease=(x:number)=>{x=Math.max(0,Math.min(1,x));return x*x*(3-2*x)};
+const lerp=(f:number,a:number,b:number,v1:number,v2:number)=>interpolate(f,[a,b],[v1,v2],{extrapolateLeft:'clamp',extrapolateRight:'clamp'});
+const pulse=(f:number,p:number=90)=>0.5+0.5*Math.sin(f/p*Math.PI*2);
 
-function Stars({n=90,drift=0}:{n?:number;drift?:number}){return <g>{Array.from({length:n},(_,i)=>{const x=(i*173+drift*2.1)%2050-60,y=(i*97+drift*.32)%1120-20;return <circle key={i} cx={x} cy={y} r={1+(i%4)} fill={i%9===0?C.gold:C.cream} opacity={.25+(i%6)*.1}/>})}</g>}
-function Professor({x=960,y=800,s=1,look=0,panic=0,stretch=0,rot=0}:{x?:number;y?:number;s?:number;look?:number;panic?:number;stretch?:number;rot?:number}){const hairS=1+stretch*.35,b=Math.sin(panic*18)*7;return <g transform={`translate(${x} ${y}) rotate(${rot}) scale(${s})`}><g transform={`translate(${b} 0)`}><path d="M-105-110L-155-160-112-151-125-208-70-165-53-220-12-171 25-216 42-167 105-192 80-145 135-137 91-101Z" fill={C.hair} transform={`scale(${hairS} 1)`}/><circle cy="-65" r="112" fill={C.skin}/><path d="M-76-5Q0 55 76-5Q60 55 0 70Q-60 55-76-5Z" fill="#edf0e7"/><path d="M-73-5Q-35-42 0-6Q35-42 73-5L60 23Q0 57-60 23Z" fill="#cbd5d2"/><circle cx="-72" cy="-65" r="54" fill="#fff"/><circle cx="72" cy="-65" r="54" fill="#fff"/><circle cx={-72+look*18} cy="-65" r={10+panic*9} fill={C.brown}/><circle cx={72+look*18} cy="-65" r={10+panic*9} fill={C.brown}/><path d="M-103-112Q-70-135-36-118M36-118Q70-135 103-112" stroke="#8b9694" strokeWidth="15" strokeLinecap="round"/><path d="M-55-128H55" stroke={C.brown} strokeWidth="13" strokeLinecap="round"/><path d={panic>.45?'M-30 23Q0 0 30 23':'M-28 18Q0 36 28 18'} stroke={C.brown} strokeWidth="8" fill="none" strokeLinecap="round"/><path d="M-83 45Q-128 62-142 125L-120 250Q0 280 120 250L142 125Q128 62 83 45L0 90Z" fill={C.coat}/><path d="M-40 48L0 90 40 48 18 253H-18Z" fill="#f4d5a0"/><path d="M0 91L-20 115 0 255 20 115Z" fill={C.brown}/><circle cx="72" cy="92" r="10" fill={C.red}/><path d="M-86 70Q-135 92-168 145M86 70Q135 92 168 145" stroke={C.coat} strokeWidth="44" strokeLinecap="round"/><circle cx="-170" cy="148" r="21" fill={C.skin}/><circle cx="170" cy="148" r="21" fill={C.skin}/><path d="M-50 250L-58 315M50 250L58 315" stroke={C.brown} strokeWidth="35" strokeLinecap="round"/><ellipse cx="-65" cy="322" rx="50" ry="22" fill={C.brown}/><ellipse cx="65" cy="322" rx="50" ry="22" fill={C.brown}/></g></g>}
-function Bob({x=1500,y=220,s=1,rot=0}:{x?:number;y?:number;s?:number;rot?:number}){return <g transform={`translate(${x} ${y}) rotate(${rot}) scale(${s})`}><circle r="48" fill={C.cream}/><circle r="31" fill={C.bg}/><circle r="14" fill={C.cyan}/><path d="M-55 35Q0 75 55 35" fill="none" stroke={C.pink} strokeWidth="10" strokeLinecap="round"/><circle cx="40" cy="-40" r="10" fill={C.gold}/></g>}
-function Duck({x=960,y=850,s=1,rot=0}:{x?:number;y?:number;s?:number;rot?:number}){return <g transform={`translate(${x} ${y}) rotate(${rot}) scale(${s})`}><ellipse cx="0" cy="25" rx="55" ry="38" fill={C.gold}/><circle cx="-25" cy="-15" r="35" fill={C.gold}/><path d="M-58-12L-92 2-58 15Z" fill={C.orange}/><circle cx="-35" cy="-23" r="5" fill={C.bg}/></g>}
-function BH({x=960,y=540,s=1,spin=0}:{x?:number;y?:number;s?:number;spin?:number}){return <g transform={`translate(${x} ${y}) scale(${s})`}><ellipse rx="330" ry="78" fill={C.orange} opacity=".18"/><ellipse rx="275" ry="58" fill="none" stroke={C.orange} strokeWidth="48" opacity=".62"/><ellipse rx="230" ry="45" fill="none" stroke={C.gold} strokeWidth="16"/><circle r="175" fill={C.black}/><circle r="185" fill="none" stroke="#fff0bd" strokeWidth="5"/><g transform={`rotate(${spin})`}>{Array.from({length:22},(_,i)=>{const a=i*Math.PI*2/22;return <circle key={i} cx={Math.cos(a)*285} cy={Math.sin(a)*58} r={5+(i%3)*2} fill={i%2?C.orange:C.gold}/>})}</g></g>}
-function Txt({children,x=960,y=100,size=44,accent=false}:{children:React.ReactNode;x?:number;y?:number;size?:number;accent?:boolean}){return <text x={x} y={y} textAnchor="middle" fill={accent?C.gold:C.cream} fontFamily="Arial,sans-serif" fontWeight="900" fontSize={size} letterSpacing="1">{children}</text>}
-function World({f}:{f:number}){const t=f/30,drift=f/9;const cycle=f%18000;const k=Math.floor(cycle/120);const u=(cycle%120)/120;const section=Math.floor(cycle/1800);const q=k%15;
- const bg=section>=9?C.black:section>=6?'#17102b':section>=3?C.bg:C.deep;
- const pan=(q-7)*55;
- return <g>
-  <rect width="1920" height="1080" fill={bg}/><Stars n={section===0?55:105} drift={drift}/>
-  {section===0&&<g>
-   <BH x={960+pan} y={535} s={1.05-u*.08} spin={t*5}/>
-   <Professor x={430+I(u,[0,1],[0,1050])} y={810-I(u,[0,1],[0,260])} s={.42+.08*u} look={1} panic={u}/>
-   <Bob x={1500-pan} y={210+Math.sin(t)*18} s={.55}/>
-   <Duck x={520+I(u,[0,1],[0,760])} y={850-I(u,[0,1],[0,300])} s={.35} rot={u*720}/>
-   {q%3===0&&<Txt y={100} size={50}>WHAT ACTUALLY HAPPENS IF YOU FALL IN?</Txt>}
-   {q%3===1&&<Txt y={100} size={46} accent>ONE FALL. TWO STORIES.</Txt>}
-   {q%3===2&&<Txt y={100} size={42}>AND THEY ARE BOTH RELATIVITY.</Txt>}
-  </g>}
-  {section===1&&<g>
-   <g transform={`translate(${q%2?1450:470} 540) scale(${1+u*.25})`}><circle r="205" fill={q%2?C.black:'#f5a45b'}/><circle r={q%2?215:155} fill={q%2?'none':'#ffd66b'} stroke={q%2?C.gold:'none'} strokeWidth="10"/></g>
-   <path d="M180 820Q650 690 980 820T1780 820" fill="none" stroke={C.cyan} strokeWidth="12" opacity=".7"/>
-   <Professor x={960+Math.sin(t)*130} y={830} s={.38} look={q%2}/>
-   <Duck x={960+pan} y={900} s={.55} rot={u*90}/>
-   <Txt y={105} size={q%2?46:50}>{q%2?'SAME MASS. SAME ORBIT. NO SUNLIGHT.':'BLACK HOLE ≠ COSMIC VACUUM CLEANER'}</Txt>
-   {q===4&&<Txt y={995} size={48} accent>EARTH'S ORBIT BARELY CARES.</Txt>}
-   {q===7&&<Txt y={995} size={52} accent>EARTH → 8.9 MILLIMETRES.</Txt>}
-   {q===10&&<Txt y={995} size={52} accent>SUN → 2.95 KILOMETRES.</Txt>}
-  </g>}
-  {section===2&&<g>
-   <BH x={960} y={560} s={.85+u*.22} spin={t*10}/>
-   <circle cx="960" cy="560" r={290+u*170} fill="none" stroke={C.cyan} strokeWidth="5" strokeDasharray="14 18" opacity=".8"/>
-   <Professor x={420+u*620} y={820-u*260} s={.45} look={1} panic={u}/>
-   <Duck x={570+u*650} y={850-u*300} s={.32} rot={u*1080}/>
-   <Txt y={105} size={q%2?48:54}>{q%2?'THE EVENT HORIZON IS NOT A WALL.':'A REGION OF SPACETIME.'}</Txt>
-   {q===7&&<Txt y={990} size={45} accent>PAST THIS: ALL FUTURE PATHS LEAD INWARD.</Txt>}
-   {q===11&&<Txt y={990} size={44} accent>THE “SURFACE” IS A BOUNDARY, NOT A FLOOR.</Txt>}
-  </g>}
-  {section===3&&<g>
-   <BH x={1040} y={540} s={.92} spin={t*14}/>
-   <path d={`M120 760 Q${520+u*220} ${300-u*180} 1040 365`} fill="none" stroke={C.cream} strokeWidth="7" opacity=".75"/>
-   <path d={`M80 320 Q${560-u*170} ${760+u*120} 1040 700`} fill="none" stroke={C.cyan} strokeWidth="6" opacity=".6"/>
-   <g transform={`translate(${420+u*500} ${760-u*330}) rotate(${u*360})`}><Professor s={.45} look={1} panic={u}/></g>
-   <Txt y={105} size={q%3===0?48:42}>{q%3===0?'GRAVITY BENDS LIGHT.':q%3===1?'YOU CAN SEE LIGHT FROM BEHIND THE HOLE.':'AND THEN IT GETS WEIRD.'}</Txt>
-   {q===8&&<Txt y={990} size={48} accent>PHOTON SPHERE: 1.5 × SCHWARZSCHILD RADIUS.</Txt>}
-   {q===11&&<circle cx="1040" cy="540" r="300" fill="none" stroke={C.gold} strokeWidth="5" strokeDasharray="8 12"/>}
-  </g>}
-  {section===4&&<g>
-   <BH x={1450} y={550} s={.72} spin={t*18}/>
-   <g transform="translate(440 520)"><circle r="170" fill={C.blue}/><path d="M-120 40Q0-110 120 40" fill="none" stroke={C.gold} strokeWidth="15"/><circle r="32" fill={C.cream}/></g>
-   <path d="M620 520 C900 520 1040 550 1190 550" fill="none" stroke={C.cyan} strokeWidth="8" strokeDasharray="18 14"/>
-   <Bob x={1040} y={430} s={.7}/>
-   <g transform={`translate(${720+u*350} ${700-u*170})`}><Professor s={.43} look={1}/></g>
-   <Txt y={105} size={q%2?47:52}>{q%2?'THE OUTSIDE OBSERVER':'YOUR SIGNALS GET WEIRDER'}</Txt>
-   {q===3&&<Txt y={980} size={46} accent>REDSHIFT → REDDER → DIMMER → DELAYED.</Txt>}
-   {q===7&&<Txt y={980} size={44} accent>NO FINITE EXTERNAL SIGNAL SHOWS THE CROSSING.</Txt>}
-   {q===11&&<g transform="translate(320 790)">{[0,1,2,3,4].map(i=><line key={i} x1={i*65} y1="0" x2={i*65} y2={30+i*14} stroke={C.gold} strokeWidth="8"/>)}<Txt x={160} y={-35} size={32}>CLOCK</Txt></g>}
-  </g>}
-  {section===5&&<g>
-   <BH x={960} y={560} s={.78} spin={t*22}/>
-   <g transform={`translate(${620+u*500} ${780-u*330}) rotate(${u*720})`}><Professor s={.47} look={1} panic={u} stretch={Math.max(0,u-.55)*2}/></g>
-   <Duck x={580+u*750} y={820-u*270} s={.3} rot={u*1440}/>
-   <path d="M0 240Q420 100 960 240T1920 240" fill="none" stroke={C.pink} strokeWidth="8" opacity=".4"/>
-   <Txt y={105} size={q%2?46:52}>{q%2?'FROM YOUR VIEW: KEEP FALLING.':'THE HORIZON DOESN’T FEEL SPECIAL.'}</Txt>
-   {q===5&&<Txt y={990} size={45} accent>FOR A HUGE BLACK HOLE, YOU MAY FEEL… NOTHING.</Txt>}
-   {q===9&&<Txt y={990} size={48} accent>YOU CROSS IT IN FINITE PROPER TIME.</Txt>}
-   {q===12&&<Txt y={990} size={45} accent>NO COSMIC FIREWALL REQUIRED BY CLASSICAL GR.</Txt>}
-  </g>}
-  {section===6&&<g>
-   <g transform="translate(960 560)">{Array.from({length:11},(_,i)=><path key={'h'+i} d={`M${-500+i*100} -430 Q 0 ${-300+(i-5)*(i-5)*12} ${500-i*100} 430`} fill="none" stroke={i%2?C.orange:C.cyan} strokeWidth="4" opacity=".6"/>)}{Array.from({length:9},(_,i)=><path key={'v'+i} d={`M${-400+i*100} -450 Q ${(i-4)*35} 0 ${-400+i*100} 450`} fill="none" stroke={C.gold} strokeWidth="4" opacity=".55"/>)}</g>
-   <Professor x={960+Math.sin(t*2)*170} y={770} s={.43} panic={u} stretch={u}/>
-   <Txt y={105} size={q%2?48:53}>{q%2?'TIDAL FORCES ARE THE REAL PROBLEM.':'GRAVITY IS NOT EQUALLY STRONG EVERYWHERE.'}</Txt>
-   {q===4&&<Txt y={990} size={47} accent>SMALL BLACK HOLE → BIG DIFFERENCE ACROSS YOU.</Txt>}
-   {q===8&&<Txt y={990} size={48} accent>SUPERMASSIVE BLACK HOLE → HORIZON CAN BE GENTLE.</Txt>}
-   {q===12&&<Txt y={990} size={48} accent>SPAGHETTIFICATION IS A GRADIENT.</Txt>}
-  </g>}
-  {section===7&&<g>
-   <BH x={960} y={550} s={.78} spin={t*26}/>
-   <g transform="translate(960 550)">{Array.from({length:12},(_,i)=><circle key={i} cx={Math.cos(i*Math.PI/6)*(230+i*9)} cy={Math.sin(i*Math.PI/6)*(230+i*9)} r="5" fill={C.gold}/>)}</g>
-   <g transform="translate(960 820)"><Professor s={.36} look={1}/></g>
-   <Txt y={105} size={q%2?48:54}>{q%2?'SO WHICH STORY IS REAL?':'HERE’S THE RABBIT HOLE.'}</Txt>
-   {q===4&&<Txt y={980} size={48} accent>AN EVENT CAN BE REAL WITHOUT YOU SEEING ITS SIGNAL.</Txt>}
-   {q===7&&<Txt y={980} size={47} accent>“SIMULTANEOUS” IS NOT UNIVERSAL.</Txt>}
-   {q===10&&<Txt y={980} size={46} accent>LOCATION + MOTION CHANGE YOUR CLOCK.</Txt>}
-   {q===13&&<Txt y={980} size={46} accent>RELATIVITY CHANGES WHAT “NOW” MEANS.</Txt>}
-  </g>}
-  {section===8&&<g>
-   <g transform={`translate(960 540) scale(${1+u*.25})`}><circle r="270" fill={C.purple}/><circle r="205" fill={C.black}/><circle r="218" fill="none" stroke={C.gold} strokeWidth="10"/><path d="M-170 0Q0-140 170 0" fill="none" stroke={C.cyan} strokeWidth="9"/><circle cx="0" cy="0" r="35" fill={C.cream}/></g>
-   <g transform="translate(350 790)"><circle r="65" fill={C.cream}/><path d="M0 0L0-42" stroke={C.brown} strokeWidth="8"/><path d="M0 0L35 18" stroke={C.brown} strokeWidth="8"/><circle r="8" fill={C.red}/></g>
-   <g transform="translate(1570 790)"><circle r="65" fill={C.cream}/><path d="M0 0L-18-38" stroke={C.brown} strokeWidth="8"/><path d="M0 0L38 8" stroke={C.brown} strokeWidth="8"/><circle r="8" fill={C.red}/></g>
-   <Txt y={105} size={q%2?49:55}>{q%2?'INFORMATION IS THE NEXT MYSTERY.':'TWO CLOCKS. TWO DESCRIPTIONS.'}</Txt>
-   {q===5&&<Txt y={980} size={46} accent>BLACK HOLES MEET QUANTUM MECHANICS.</Txt>}
-   {q===9&&<Txt y={980} size={45} accent>HAWKING RADIATION MAKES THE STORY HARDER.</Txt>}
-   {q===13&&<Txt y={980} size={44} accent>THE INFORMATION PARADOX IS STILL A LIVE PROBLEM.</Txt>}
-  </g>}
-  {section===9&&<g>
-   <BH x={960} y={535} s={.72} spin={t*30}/><Professor x={480} y={805} s={.4} look={1}/><Bob x={1440} y={270} s={.62}/><Duck x={1120} y={790} s={.32}/>
-   <path d="M650 730Q960 600 1270 730" fill="none" stroke={C.cyan} strokeWidth="7" strokeDasharray="12 12"/>
-   <Txt y={110} size={51}>ONE FALL. TWO STORIES.</Txt>
-   <Txt y={930} size={42} accent>OUTSIDE: NO FINITE CROSSING SIGNAL.</Txt>
-   <Txt y={990} size={42} accent>INSIDE: YOU CROSS IN FINITE PROPER TIME.</Txt>
-   {q===13&&<Txt y={1040} size={38}>SAME BLACK HOLE. DIFFERENT OBSERVATIONS. SAME PHYSICS.</Txt>}
-  </g>}
-  <g opacity={q===14?.85:0}><rect x="70" y="70" width="1780" height="940" rx="35" fill="none" stroke={C.cream} strokeWidth="2" opacity=".08"/></g>
+function Bg({f,mode}:{f:number;mode:number}){return <g>
+ <defs><filter id="glow"><feGaussianBlur stdDeviation="10"/></filter><filter id="soft"><feGaussianBlur stdDeviation="3"/></filter></defs>
+ <rect width="1920" height="1080" fill={C.navy}/>
+ <rect width="1920" height="1080" fill={mode%3===0?C.purple:'#10133b'} opacity=".38"/>
+ <g opacity=".35" transform={`translate(${(f*.18)%240} 0)`}>{Array.from({length:18},(_,i)=><circle key={i} cx={i*130} cy={110+(i*83)%820} r={2+(i%4)} fill={i%3?C.cream:C.cyan}/>)}</g>
+ <g opacity=".22" transform={`translate(${(-f*.55)%500} 0)`}>{Array.from({length:10},(_,i)=><ellipse key={i} cx={i*230} cy={180+(i*91)%760} rx={90+(i%3)*40} ry={18+(i%4)*9} fill={i%2?C.pink:C.violet}/>)}</g>
+ <g opacity=".3">{Array.from({length:45},(_,i)=><circle key={i} cx={(i*211+f*.8)%2050-50} cy={(i*137)%1050} r={1+(i%3)} fill={C.cream}/>)}</g>
  </g>}
-export const Explainer:React.FC=()=>{const f=useCurrentFrame();const fade=Math.min(I(f%1800,[0,18],[0,1]),I(f%1800,[1780,1799],[1,0]));return <AbsoluteFill style={{background:C.black,overflow:'hidden'}}><svg width="100%" height="100%" viewBox="0 0 1920 1080"><g opacity={fade}><World f={f}/></g></svg></AbsoluteFill>};
+
+function Professor({x,y,s=1,expr=0,stretch=0,rot=0}:{x:number;y:number;s?:number;expr?:number;stretch?:number;rot?:number}){
+ const bob=Math.sin(useCurrentFrame()/18)*4, eye=expr===3?5:expr===1?2:11, mouth=expr===0?'M-24 18Q0 42 24 18':expr===1?'M-22 35Q0 5 22 35':expr===2?'M-25 25Q0 5 25 25':'M-20 24Q0 28 20 24';
+ const panic=expr===1||expr===4, surprised=expr===0||expr===5;
+ return <g transform={`translate(${x} ${y+bob}) rotate(${rot}) scale(${s})`}>
+  <path d="M-108-112L-160-155-112-148-130-205-72-164-45-225-8-168 30-215 48-165 112-195 83-145 143-132 91-102Z" fill={C.hair} transform={`scale(${1+stretch*.5} 1)`}/>
+  <circle cy="-68" r="112" fill={C.skin}/>
+  <path d="M-76 4Q0 68 76 4Q58 58 0 72Q-58 58-76 4Z" fill="#d7dfdd"/>
+  <circle cx="-65" cy="-67" r="54" fill={C.cream}/><circle cx="65" cy="-67" r="54" fill={C.cream}/>
+  <circle cx="-65" cy="-67" r={eye} fill={C.brown}/><circle cx="65" cy="-67" r={eye} fill={C.brown}/>
+  <path d="M-103-112Q-70-137-35-118M35-118Q70-137 103-112" stroke={panic?C.red:'#7e8989'} strokeWidth="15" strokeLinecap="round" fill="none"/>
+  <path d="M-55-128H55" stroke={C.brown} strokeWidth="13" strokeLinecap="round"/>
+  <path d={mouth} stroke={C.brown} strokeWidth="8" fill="none" strokeLinecap="round"/>
+  <path d="M-84 46Q-128 68-145 128L-120 250Q0 285 120 250L145 128Q128 68 84 46L0 90Z" fill={C.coat}/>
+  <path d="M-42 48L0 91 42 48 19 253H-19Z" fill={C.gold}/><path d="M0 91L-20 115 0 255 20 115Z" fill={C.brown}/>
+  <circle cx="72" cy="93" r="10" fill={C.red}/>
+  <path d="M-87 70Q-135 96-165 150M87 70Q135 96 165 150" stroke={C.coat} strokeWidth="44" strokeLinecap="round"/>
+  <circle cx="-166" cy="151" r="21" fill={C.skin}/><circle cx="166" cy="151" r="21" fill={C.skin}/>
+  <path d="M-50 250L-58 315M50 250L58 315" stroke={C.brown} strokeWidth="35" strokeLinecap="round"/>
+  <ellipse cx="-66" cy="322" rx="50" ry="22" fill={C.brown}/><ellipse cx="66" cy="322" rx="50" ry="22" fill={C.brown}/>
+  {panic&&<circle cx="105" cy="-7" r="10" fill={C.cyan}/>}
+ </g>}
+
+function Bob({x,y,s=1,cry=false}:{x:number;y:number;s?:number;cry?:boolean}){return <g transform={`translate(${x} ${y}) scale(${s})`}><circle r="65" fill={C.cream}/><circle r="42" fill={C.navy}/><circle r="19" fill={C.cyan}/><circle cx="36" cy="-45" r="12" fill={C.gold}/><path d={cry?'M-28 20Q0 4 28 20':'M-28 20Q0 40 28 20'} fill="none" stroke={C.pink} strokeWidth="10" strokeLinecap="round"/>{cry&&<circle cx="20" cy="35" r="7" fill={C.cyan}/>}</g>}
+
+function Duck({x,y,s=1,stretch=0,rot=0}:{x:number;y:number;s?:number;stretch?:number;rot?:number}){return <g transform={`translate(${x} ${y}) rotate(${rot}) scale(${s*(1+stretch)} ${s/(1+stretch*.65)})`}><ellipse cx="0" cy="20" rx="62" ry="42" fill={C.gold}/><circle cx="-27" cy="-20" r="38" fill={C.gold}/><path d="M-60-17L-100 0-60 18Z" fill={C.orange}/><circle cx="-38" cy="-30" r="6" fill={C.black}/></g>}
+
+function BlackHole({x=960,y=540,s=1,spin=0}:{x?:number;y?:number;s?:number;spin?:number}){return <g transform={`translate(${x} ${y}) scale(${s})`}>
+ <ellipse rx="350" ry="78" fill={C.orange} opacity=".2" filter="url(#glow)"/>
+ <ellipse rx="310" ry="68" fill="none" stroke={C.orange} strokeWidth="55" opacity=".48"/>
+ <ellipse rx="290" ry="58" fill="none" stroke={C.gold} strokeWidth="19"/>
+ <path d="M-305-30Q0-205 305-30Q0-92-305-30Z" fill={C.orange} opacity=".9"/>
+ <path d="M-305 30Q0 205 305 30Q0 92-305 30Z" fill={C.gold} opacity=".75"/>
+ <circle r="192" fill={C.black}/>
+ <circle r="203" fill="none" stroke={C.cream} strokeWidth="6"/>
+ <g transform={`rotate(${spin})`}>{Array.from({length:26},(_,i)=>{const a=i*Math.PI*2/26;return <circle key={i} cx={Math.cos(a)*325} cy={Math.sin(a)*62} r={6+(i%3)*2} fill={i%2?C.orange:C.gold}/>})}</g>
+ <path d="M-130-205Q0-330 130-205L75-214Q0-275-75-214Z" fill={C.blue} opacity=".65" filter="url(#soft)"/>
+ </g>}
+
+const caps=[
+"ONE FALL. TWO STORIES.","A BLACK HOLE IS NOT A VACUUM CLEANER.","SAME MASS. DARK SKY.","EARTH → 8.9 MILLIMETRES.","SUN → 2.95 KILOMETRES.","SPACETIME BENDS.","LIGHT CAN LOOP.","LOOK BEHIND THE HOLE.","THE PHOTON ORBIT.","MEET BOB.","YOUR SIGNALS REDSHIFT.","THEN THEY FADE.","NO PHYSICAL SURFACE.","YOU KEEP FALLING.","FINITE PROPER TIME.","TIDAL FORCE STRETCHES YOU.","THE DUCK REGRETS THIS.","MASS CHANGES EVERYTHING.","TWO MASKS. TWO STORIES.","RELATIVITY IS NOT A GLITCH.","NO UNIVERSAL CLOCK.","INSIDE, ESCAPE CHANGES.","TOMORROW POINTS INWARD.","THE SINGULARITY IS A WARNING.","WHAT HAPPENS TO INFORMATION?","THE HORIZON MAY ENCODE AREA.","THE HOLOGRAPHIC IDEA.","BLACK HOLES CAN GLOW.","HAWKING RADIATION.","10^67 YEARS.","A VERY LONG WAIT.","BACK TO THE TWO STORIES.","OUTSIDE: SIGNALS FADE.","INSIDE: YOU CROSS.","SAME PHYSICS. DIFFERENT MEASUREMENTS.","THE DUCK SURVIVED. BARELY.","WHAT DOES “HAPPENED” MEAN?","ONE FALL. TWO STORIES.","TIME IS THE STRANGEST PART."
+];
+
+function Visual({f}:{f:number}){
+ const scene=Math.min(39,Math.floor(f/450)), beat=Math.floor((f%450)/90), local=f%450, z=1+0.06*ease(local/450), p=(beat-2)*35;
+ const mode=scene<5?0:scene<10?1:scene<16?2:scene<22?3:scene<27?4:scene<32?5:6;
+ const subjectX=960+p;
+ const professorExpr=[5,3,1,0,2,4,5,3][(scene+beat)%8];
+ return <g>
+  <Bg f={f} mode={mode}/>
+  <g transform={`translate(${960-subjectX} 540) scale(${z}) translate(-960 -540)`}>
+   {scene<=2&&<><BlackHole x={1250} y={560} s={.9}/><Professor x={470+beat*120} y={800-beat*35} s={.55} expr={professorExpr}/><Bob x={1600} y={220} s={.6}/><Duck x={700+beat*170} y={830-beat*30} s={.42} rot={beat*110}/></>}
+   {scene>=3&&scene<=5&&<><g transform={`translate(${960} 570) scale(${1-beat*.08})`}><circle r={190} fill={beat===0?C.blue:C.cream}/>{beat>1&&<circle r={80+beat*35} fill={C.black}/>}</g><BlackHole x={1380} y={590} s={.55+beat*.1}/><Professor x={430+beat*230} y={820-beat*40} s={.52} expr={professorExpr}/><Duck x={650+beat*220} y={870} s={.36}/></>}
+   {scene>=6&&scene<=9&&<><BlackHole x={980} y={560} s={.82} spin={f/18}/><g opacity={.55}>{Array.from({length:16},(_,i)=><path key={i} d={`M80 ${160+i*52} Q 650 ${80+(i%5)*140} 1820 ${190+i*42}`} fill="none" stroke={i%2?C.cyan:C.pink} strokeWidth="5"/>)}</g><Professor x={360+beat*260} y={820-beat*45} s={.55} expr={professorExpr}/><Duck x={650+beat*170} y={840} s={.35}/></>}
+   {scene>=10&&scene<=13&&<><BlackHole x={1450} y={560} s={.62}/><Bob x={1020} y={440} s={.72} cry={scene>=12}/><g transform={`translate(${680+beat*130} ${710-beat*65})`}><Professor s={.5} expr={scene===13?1:professorExpr}/></g><g opacity={.65}>{Array.from({length:6},(_,i)=><line key={i} x1={720+i*85} y1={650-i*15} x2={1080+i*45} y2={560-i*7} stroke={C.cyan} strokeWidth={8} strokeDasharray="20 18"/>)}</g></>}
+   {scene>=14&&scene<=17&&<><BlackHole x={960} y={560} s={.75}/><g transform={`translate(${760+beat*90} ${760-beat*65}) rotate(${beat*180}) scale(${1+beat*.16} ${1-beat*.06})`}><Professor s={.48} expr={beat===4?1:professorExpr} stretch={beat>2?beat*.25:0}/></g><Duck x={1130} y={780} s={.38} stretch={beat>1?beat*.55:0} rot={beat*90}/></>}
+   {scene>=18&&scene<=21&&<><BlackHole x={960} y={560} s={.72}/><g transform="translate(520 770)"><circle r="105" fill={C.cream}/><path d="M0 0L0-65M0 0L55 28" stroke={C.brown} strokeWidth="11"/></g><g transform="translate(1400 770)"><circle r="105" fill={C.cream}/><path d="M0 0L-35-55M0 0L68 4" stroke={C.brown} strokeWidth="11"/></g><Professor x={960} y={820} s={.48} expr={professorExpr}/>{beat===2&&<><rect x="410" y="560" width="210" height="90" rx="30" fill={C.cyan}/><rect x="1300" y="560" width="210" height="90" rx="30" fill={C.pink}/></>}</>}
+   {scene>=22&&scene<=24&&<><BlackHole x={960} y={560} s={.78}/><g transform={`translate(960 560) rotate(${f/30})`}>{Array.from({length:12},(_,i)=><circle key={i} cx={Math.cos(i*Math.PI/6)*310} cy={Math.sin(i*Math.PI/6)*310} r="9" fill={C.gold}/>)}</g><Professor x={430+beat*200} y={830-beat*45} s={.52} expr={professorExpr}/></>}
+   {scene>=25&&scene<=28&&<><g transform={`translate(960 560) scale(${1+beat*.08})`}><circle r="260" fill={C.violet}/><circle r="190" fill={C.black}/><circle r="202" fill="none" stroke={C.gold} strokeWidth="12"/></g><g transform={`translate(${450+beat*210} 760)`}><Professor s={.48} expr={professorExpr}/></g><path d="M300 380Q960 120 1620 380" fill="none" stroke={C.cyan} strokeWidth={beat===3?18:6} opacity=".7"/></>}
+   {scene>=29&&scene<=32&&<><BlackHole x={960} y={560} s={.72}/><g transform={`translate(960 560) scale(${1+beat*.25})`}><circle r="220" fill="none" stroke={C.cyan} strokeWidth="9" strokeDasharray="16 12"/><circle r="175" fill={C.black}/></g><Professor x={430+beat*260} y={820-beat*40} s={.5} expr={beat===3?5:professorExpr}/><Bob x={1500} y={250} s={.58}/></>}
+   {scene>=33&&<><BlackHole x={960} y={550} s={.7}/><Professor x={430} y={820} s={.52} expr={scene===39?5:professorExpr}/><Bob x={1500} y={260} s={.6} cry={scene===33}/><Duck x={1110} y={790} s={.38} stretch={scene===35?.9:0}/>{scene===39&&<circle cx="960" cy="550" r="285" fill="none" stroke={C.cream} strokeWidth="3" opacity=".25"/>}</>}
+  </g>
+  <g transform={`translate(960 930) scale(${.98+.02*pulse(f,45)})`}><rect x="-650" y="-52" width="1300" height="78" rx="38" fill={C.black} opacity=".68"/><text textAnchor="middle" y="0" fill={C.cream} fontFamily="Arial,sans-serif" fontWeight="800" fontSize="34">{caps[scene]}</text></g>
+ </g>
+}
+
+export const Explainer:React.FC=()=>{
+ const f=useCurrentFrame(); const {durationInFrames}=useVideoConfig();
+ return <AbsoluteFill style={{background:C.black,overflow:'hidden'}}>
+  <Audio src={staticFile('audio/narration.wav')} volume={1}/>
+  <Audio src={staticFile('audio/music.wav')} volume={0.18}/>
+  <Audio src={staticFile('audio/fx.wav')} volume={0.34}/>
+  <svg width="100%" height="100%" viewBox="0 0 1920 1080"><Visual f={f}/></svg>
+ </AbsoluteFill>
+};
