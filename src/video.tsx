@@ -1,5 +1,6 @@
 import React from 'react';
 import {AbsoluteFill, Audio, interpolate, staticFile, useCurrentFrame, useVideoConfig} from 'remotion';
+import {CAPTIONS} from './captions';
 
 const C={navy:'#0a0b2a',purple:'#37205f',violet:'#7046b8',orange:'#ff7b38',gold:'#ffd34f',cyan:'#55e7ef',pink:'#ee5d9f',red:'#ff4e62',cream:'#fff2c8',black:'#02030a',blue:'#78a8ff',teal:'#49d7b0',skin:'#f1b48e',hair:'#b9e3e9',coat:'#7e8d90',brown:'#5a3d48'};
 const ease=(x:number)=>{x=Math.max(0,Math.min(1,x));return x*x*(3-2*x)};
@@ -53,9 +54,7 @@ function BlackHole({x=960,y=540,s=1,spin=0}:{x?:number;y?:number;s?:number;spin?
  <path d="M-130-205Q0-330 130-205L75-214Q0-275-75-214Z" fill={C.blue} opacity=".65" filter="url(#soft)"/>
  </g>}
 
-const caps=[
-"ONE FALL. TWO STORIES.","A BLACK HOLE IS NOT A VACUUM CLEANER.","SAME MASS. DARK SKY.","EARTH → 8.9 MILLIMETRES.","SUN → 2.95 KILOMETRES.","SPACETIME BENDS.","LIGHT CAN LOOP.","LOOK BEHIND THE HOLE.","THE PHOTON ORBIT.","MEET BOB.","YOUR SIGNALS REDSHIFT.","THEN THEY FADE.","NO PHYSICAL SURFACE.","YOU KEEP FALLING.","FINITE PROPER TIME.","TIDAL FORCE STRETCHES YOU.","THE DUCK REGRETS THIS.","MASS CHANGES EVERYTHING.","TWO MASKS. TWO STORIES.","RELATIVITY IS NOT A GLITCH.","NO UNIVERSAL CLOCK.","INSIDE, ESCAPE CHANGES.","TOMORROW POINTS INWARD.","THE SINGULARITY IS A WARNING.","WHAT HAPPENS TO INFORMATION?","THE HORIZON MAY ENCODE AREA.","THE HOLOGRAPHIC IDEA.","BLACK HOLES CAN GLOW.","HAWKING RADIATION.","10^67 YEARS.","A VERY LONG WAIT.","BACK TO THE TWO STORIES.","OUTSIDE: SIGNALS FADE.","INSIDE: YOU CROSS.","SAME PHYSICS. DIFFERENT MEASUREMENTS.","THE DUCK SURVIVED. BARELY.","WHAT DOES “HAPPENED” MEAN?","ONE FALL. TWO STORIES.","TIME IS THE STRANGEST PART."
-];
+
 
 function Visual({f}:{f:number}){
  const scene=Math.min(39,Math.floor(f/450)), beat=Math.floor((f%450)/90), local=f%450, z=1+0.06*ease(local/450), p=(beat-2)*35;
@@ -76,7 +75,11 @@ function Visual({f}:{f:number}){
    {scene>=29&&scene<=32&&<><BlackHole x={960} y={560} s={.72}/><g transform={`translate(960 560) scale(${1+beat*.25})`}><circle r="220" fill="none" stroke={C.cyan} strokeWidth="9" strokeDasharray="16 12"/><circle r="175" fill={C.black}/></g><Professor x={430+beat*260} y={820-beat*40} s={.5} expr={beat===3?5:professorExpr}/><Bob x={1500} y={250} s={.58}/></>}
    {scene>=33&&<><BlackHole x={960} y={550} s={.7}/><Professor x={430} y={820} s={.52} expr={scene===39?5:professorExpr}/><Bob x={1500} y={260} s={.6} cry={scene===33}/><Duck x={1110} y={790} s={.38} stretch={scene===35?.9:0}/>{scene===39&&<circle cx="960" cy="550" r="285" fill="none" stroke={C.cream} strokeWidth="3" opacity=".25"/>}</>}
   </g>
-  <g transform={`translate(960 930) scale(${.98+.02*pulse(f,45)})`}><rect x="-650" y="-52" width="1300" height="78" rx="38" fill={C.black} opacity=".68"/><text textAnchor="middle" y="0" fill={C.cream} fontFamily="Arial,sans-serif" fontWeight="800" fontSize="34">{caps[scene]}</text></g>
+  <g transform={`translate(960 944)`}><rect x="-820" y="-56" width="1640" height="86" rx="42" fill={C.black} opacity=".72"/><text textAnchor="middle" y="-2" fill={C.cream} fontFamily="Arial,sans-serif" fontWeight="700" fontSize="30">{CAPTIONS[scene]||''}</text></g>
+  {scene===3&&beat===2&&<text x="960" y="180" textAnchor="middle" fill={C.gold} fontFamily="Arial,sans-serif" fontWeight="900" fontSize="86">8.9 mm</text>}
+  {scene===4&&beat===2&&<text x="960" y="180" textAnchor="middle" fill={C.gold} fontFamily="Arial,sans-serif" fontWeight="900" fontSize="86">2.95 km</text>}
+  {scene===8&&beat===3&&<text x="960" y="180" textAnchor="middle" fill={C.cyan} fontFamily="Arial,sans-serif" fontWeight="900" fontSize="70">1.5 × Rₛ</text>}
+  {scene===29&&beat===2&&<text x="960" y="180" textAnchor="middle" fill={C.gold} fontFamily="Arial,sans-serif" fontWeight="900" fontSize="74">10⁶⁷ years</text>}
  </g>
 }
 
