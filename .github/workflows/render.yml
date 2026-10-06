@@ -91,20 +91,33 @@ jobs:
     needs: render-chunks
     runs-on: ubuntu-24.04
     timeout-minutes: 10
+    permissions:
+      actions: read
     steps:
-      - uses: actions/download-artifact@v4
-        with:
-          pattern: explainer-chunk-*
-          path: chunks
-          merge-multiple: true
-          run-id: ${{ github.run_id }}
+      - name: Download rendered chunks from this run
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p chunks
+          for i in $(seq 0 19); do
+            dir="chunks/download-$i"
+            mkdir -p "$dir"
+            gh run download "$GITHUB_RUN_ID" --name "explainer-chunk-$i" --dir "$dir"
+            file="$(find "$dir" -type f -name "chunk-$i.mp4" -print -quit)"
+            test -n "$file"
+            cp "$file" "chunks/chunk-$i.mp4"
+          done
+          ls -lh chunks
       - name: Assemble MP4
         run: |
           sudo apt-get update && sudo apt-get install -y ffmpeg
-          ls -lah chunks
-          test -f chunks/chunk-0.mp4
+          set -euo pipefail
+          for i in $(seq 0 19); do test -s "chunks/chunk-${i}.mp4"; done
           for i in $(seq 0 19); do printf "file 'chunks/chunk-${i}.mp4'\n"; done > chunks.txt
           ffmpeg -y -f concat -safe 0 -i chunks.txt -c copy out.mp4
+          test -s out.mp4
+          ls -lh out.mp4
       - uses: actions/upload-artifact@v4
         with:
           name: explainer-preview
