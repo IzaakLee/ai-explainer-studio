@@ -84,6 +84,7 @@ jobs:
           name: explainer-chunk-${{ matrix.chunk }}
           path: out/chunk-${CHUNK}.mp4
           retention-days: 1
+          if-no-files-found: error
 
   assemble:
     name: Assemble final video
