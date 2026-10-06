@@ -1,0 +1,309 @@
+Imagine you fall into a black hole.
+
+Your friend stays safely outside.
+
+You both watch the same event.
+
+And yet, you do not agree on what happens next.
+
+From your point of view, you cross the event horizon in finite time.
+
+From your friend's point of view, your signals slow down, redden, and fade away.
+
+So who is right?
+
+The uncomfortable answer is: both.
+
+And this is where black holes stop being space monsters and start becoming a very weird lesson about reality.
+
+First, forget the cosmic vacuum cleaner.
+
+A black hole does not cruise through space sucking up everything nearby.
+
+If you replaced the Sun with a black hole having exactly the same mass, Earth's orbit would barely notice.
+
+The sky would become extremely dark, but your year would still be about 365 days.
+
+The worse news is that you would have other problems.
+
+A black hole is not just a heavy ball.
+
+It is a region of spacetime where, past a certain boundary, every possible future path leads inward.
+
+That boundary is the event horizon.
+
+But how small can something become before it makes one?
+
+Take Earth.
+
+Compress all of Earth into a sphere about nine millimeters across.
+
+That's roughly the size of a pea.
+
+Congratulations.
+
+You have made a black hole.
+
+Do the same thing to the Sun, and its Schwarzschild radius is about 2.95 kilometers.
+
+The mass did not become enormous.
+
+The space around it became extraordinarily curved.
+
+Now let's approach one.
+
+This is where the universe starts doing special effects for free.
+
+The stars behind the black hole bend around it.
+
+The black hole can look larger than its simple shadow because light can loop around it.
+
+And if there is hot gas falling in, you get an accretion disk.
+
+Some of that disk appears above the hole.
+
+Some appears below it.
+
+The light is being bent around the black hole, so regions that would normally be hidden can become visible.
+
+In a carefully chosen path, light from behind you can curve around and reach your eyes.
+
+Conceptually, you can get something like a cosmic rear-view mirror.
+
+You may even see the back of your own head.
+
+The universe has invented a mirror that is also trying to eat you.
+
+Very rude.
+
+Closer still, light can orbit the black hole.
+
+For a non-spinning black hole, the unstable photon orbit sits at about one and a half Schwarzschild radii.
+
+One tiny disturbance, and the light either escapes or falls in.
+
+Now send Bob toward the horizon.
+
+Bob is our outside observer.
+
+He is also a tiny one-eyed drone with absolutely no survival instinct.
+
+Bob watches you fall.
+
+At first, nothing strange happens.
+
+Then your clock seems to slow.
+
+Your signals arrive farther apart.
+
+The light becomes more red.
+
+Then dimmer.
+
+Then fainter.
+
+To Bob, you appear to approach the horizon more and more slowly.
+
+But here is the important part.
+
+Bob does not see you freeze on a physical surface.
+
+There is no cosmic glass floor waiting for you.
+
+Your last signals simply become harder and harder to receive.
+
+Eventually, in any realistic observation, they fade away.
+
+Meanwhile, you have a completely different experience.
+
+Your own clock keeps ticking normally.
+
+Your heartbeat does not suddenly slow because the universe has decided to make you cinematic.
+
+You cross the event horizon after a finite amount of your own proper time.
+
+And for a sufficiently massive black hole, you might notice almost nothing special exactly at the horizon.
+
+No wall.
+
+No alarm.
+
+No giant sign saying, congratulations, you are doomed.
+
+The horizon is special globally.
+
+Locally, it can feel surprisingly ordinary.
+
+Now comes the painful part.
+
+Gravity changes with distance.
+
+Your feet are closer to the black hole than your head.
+
+So your feet are pulled harder.
+
+That difference is called a tidal force.
+
+For a small stellar-mass black hole, the difference can become enormous before or near the horizon.
+
+You stretch.
+
+Your body becomes a cosmic noodle.
+
+Our rubber duck volunteers to demonstrate.
+
+The duck regrets this immediately.
+
+But the size of the black hole matters.
+
+Around a supermassive black hole, the horizon can be enormous.
+
+The tidal gradient at the horizon can be much gentler.
+
+So a gigantic black hole can have a surprisingly boring horizon.
+
+The dangerous part may come later.
+
+Now imagine Bob holding two masks.
+
+One mask says, outside.
+
+The other says, falling.
+
+At the horizon, the two stories seem to collide.
+
+Bob's measurements describe signals arriving ever more slowly.
+
+Your measurements say you crossed.
+
+This is not a contradiction.
+
+It is a consequence of relativity.
+
+Different observers can slice spacetime into time and space differently.
+
+That does not mean reality is imaginary.
+
+It means a single universal cosmic clock does not exist.
+
+There is no master stopwatch floating above the universe.
+
+Your friend cannot simply ask the universe, what time is it for everyone?
+
+Time belongs to the path you take through spacetime.
+
+And now we can go deeper.
+
+Inside the horizon, the geometry of spacetime changes the meaning of escape.
+
+Outside, you can choose a future path that takes you away.
+
+Inside, every future-directed path takes you toward smaller radius.
+
+It is less like falling down a hole.
+
+It is more like discovering that tomorrow itself points inward.
+
+That is why turning around does not save you.
+
+You are not merely moving through space toward the singularity.
+
+The singularity lies in your future, in the same unavoidable sense that next Tuesday lies in your future.
+
+And then physics reaches a cliff.
+
+Classical general relativity predicts a singularity.
+
+But a singularity is not a tiny black bead sitting at the center waiting to be touched.
+
+It is a warning that our current description has stopped being complete.
+
+We need a theory that combines gravity with quantum physics.
+
+And that opens an even stranger question.
+
+What happens to information?
+
+Quantum mechanics strongly suggests that information cannot simply vanish.
+
+But a black hole appears to hide everything behind a horizon.
+
+This tension is the famous black hole information problem.
+
+One idea is that information is somehow encoded on the boundary.
+
+Not because the horizon is literally a computer screen.
+
+But because the number of quantum states associated with a region of space can behave as though information is counted by area.
+
+This leads to the holographic principle.
+
+A three-dimensional world may, in some deep description, be encoded by information living on a two-dimensional boundary.
+
+That sounds absurd.
+
+Then again, so did black holes.
+
+And there is another twist.
+
+Black holes may not be completely black.
+
+Quantum effects near the horizon predict a faint glow called Hawking radiation.
+
+For an ordinary astrophysical black hole, it is unbelievably weak.
+
+A black hole can lose energy.
+
+Very slowly.
+
+Very, very slowly.
+
+For a solar-mass black hole, the evaporation time is around 10 to the 67 years.
+
+That number is so large that writing it feels like the universe has run out of patience.
+
+Our Sun is about 4.6 billion years old.
+
+A black hole can take vastly longer than that to evaporate.
+
+So after all the falling, stretching, bending, and disappearing, the black hole may eventually fade.
+
+A final whisper of radiation.
+
+Then silence.
+
+And this brings us back to the two stories.
+
+Bob sees your signals redshift and fade.
+
+You cross the horizon in finite time.
+
+Bob never receives a normal signal announcing your crossing.
+
+You do not feel yourself hitting a surface.
+
+Both descriptions come from different measurements made along different paths through spacetime.
+
+So when someone asks, what really happens when you fall into a black hole?
+
+The best answer is not simply, you get spaghettified.
+
+That depends on the black hole.
+
+It is not simply, you freeze at the horizon.
+
+That confuses an outside observation with your local experience.
+
+And it is not simply, you fall into nothing.
+
+You encounter one of the deepest places where our theories of nature stop agreeing with each other.
+
+A black hole takes a simple question and turns it into a problem about gravity, time, information, and reality itself.
+
+So here is the question I want to leave you with.
+
+If two observers can tell two different stories about the same event, and both stories make correct predictions, what exactly do we mean when we say that an event happened?
+
+Maybe the strangest thing about a black hole is not what happens after you cross it.
+
+Maybe it is what the black hole teaches us about the meaning of time before you ever get there.
