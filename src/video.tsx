@@ -1,133 +1,41 @@
 import React from 'react';
-import {AbsoluteFill, interpolate, useCurrentFrame, Easing} from 'remotion';
+import {AbsoluteFill, interpolate, useCurrentFrame} from 'remotion';
 
-const C = {
-  bg: '#0b1020',
-  panel: '#151d38',
-  cyan: '#63e6ff',
-  yellow: '#ffd85c',
-  pink: '#ff78b7',
-  green: '#78e08f',
-  white: '#f5f7ff',
-  muted: '#9ca8c7',
-};
+const C={ink:'#0b1020',night:'#10182d',cream:'#f7f2df',cyan:'#5de1ff',yellow:'#ffd75a',pink:'#ff6fae',green:'#78e6a1',purple:'#9b8cff',red:'#ff765f',white:'#fff'};
+const clamp={extrapolateLeft:'clamp' as const,extrapolateRight:'clamp' as const};
 
-type Scene = {
-  title: string;
-  sub: string;
-  kind: 'hook'|'attention'|'eye'|'blindspot'|'illusion'|'prediction'|'memory'|'ending';
-};
-
-const scenes: Scene[] = [
-  {title:'YOUR BRAIN IS LYING TO YOU',sub:'And you usually cannot tell when.',kind:'hook'},
-  {title:'LOOK AT THE DOT',sub:'Your attention feels continuous. It is not.',kind:'attention'},
-  {title:'YOU DO NOT SEE EVERYTHING',sub:'Your eyes collect far more information than reaches awareness.',kind:'eye'},
-  {title:'THE BLIND SPOT',sub:'There is literally a hole in your visual field.',kind:'blindspot'},
-  {title:'YOUR BRAIN FILLS IT IN',sub:'Not with a warning. With a guess.',kind:'prediction'},
-  {title:'THE GUESS FEELS REAL',sub:'That is the strange part.',kind:'illusion'},
-  {title:'TRY THIS',sub:'Fix your gaze. Let the moving object disappear.',kind:'illusion'},
-  {title:'NOW MOVE YOUR EYES',sub:'The scene snaps back together.',kind:'eye'},
-  {title:'YOUR BRAIN IS NOT A CAMERA',sub:'It is an active model of the world.',kind:'prediction'},
-  {title:'IT PREDICTS',sub:'Then it compares those predictions with incoming signals.',kind:'prediction'},
-  {title:'WHEN THEY MATCH',sub:'Everything feels obvious.',kind:'attention'},
-  {title:'WHEN THEY DO NOT',sub:'You notice something changed.',kind:'attention'},
-  {title:'THIS IS USEFUL',sub:'Prediction makes a noisy world easier to navigate.',kind:'prediction'},
-  {title:'BUT IT HAS A COST',sub:'A good guess can still be wrong.',kind:'illusion'},
-  {title:'OPTICAL ILLUSIONS',sub:'Your eyes can send the same pattern while your brain reads it differently.',kind:'illusion'},
-  {title:'CONTEXT CHANGES PERCEPTION',sub:'The surrounding shapes become part of the evidence.',kind:'illusion'},
-  {title:'YOUR BRAIN USES SHORTCUTS',sub:'Usually, that saves time.',kind:'prediction'},
-  {title:'NOW THINK ABOUT ATTENTION',sub:'You can look directly at something and still miss it.',kind:'attention'},
-  {title:'CHANGE BLINDNESS',sub:'Large changes can hide when your attention is elsewhere.',kind:'attention'},
-  {title:'THE WORLD FEELS COMPLETE',sub:'Even when your attention only sampled part of it.',kind:'attention'},
-  {title:'AND THEN THERE IS MEMORY',sub:'Memory feels like playback. It is closer to reconstruction.',kind:'memory'},
-  {title:'REMEMBERING IS ACTIVE',sub:'Your brain rebuilds an event from stored pieces.',kind:'memory'},
-  {title:'EACH REBUILD CAN SHIFT',sub:'Details can become clearer, blurrier, or simply different.',kind:'memory'},
-  {title:'CONFIDENCE IS NOT A RECORDING',sub:'Feeling certain does not guarantee perfect detail.',kind:'memory'},
-  {title:'SO IS YOUR BRAIN BAD?',sub:'No. These shortcuts are part of what makes it useful.',kind:'prediction'},
-  {title:'FAST BEATS PERFECT',sub:'A brain that waits for complete information would be painfully slow.',kind:'prediction'},
-  {title:'THE REAL TRICK',sub:'Your brain constantly combines evidence with expectations.',kind:'prediction'},
-  {title:'YOU EXPERIENCE THE RESULT',sub:'Not the calculation underneath it.',kind:'illusion'},
-  {title:'THAT IS WHY IT FEELS SO REAL',sub:'The model is hidden from the person using it.',kind:'illusion'},
-  {title:'QUESTION YOUR FIRST IMPRESSION',sub:'Especially when the evidence is incomplete.',kind:'ending'},
-  {title:'LOOK AGAIN',sub:'Move your eyes. Change the context. Check the memory.',kind:'ending'},
-  {title:'YOUR BRAIN IS NOT YOUR ENEMY',sub:'It is an astonishing prediction machine.',kind:'ending'},
-  {title:'AND SOMETIMES...',sub:'The strangest thing is realizing how little you notice it working.',kind:'ending'},
-];
-
-const clamp = {extrapolateLeft:'clamp' as const, extrapolateRight:'clamp' as const};
-
-const Puzzle = ({progress, x=960, y=510}: {progress:number;x?:number;y?:number}) => {
-  const pieces = [
-    {x:-110,y:-55,fill:C.cyan},{x:0,y:-55,fill:C.yellow},
-    {x:-110,y:55,fill:C.pink},{x:0,y:55,fill:C.green},
-    {x:110,y:0,fill:C.white},
-  ];
-  return <g transform={'translate('+x+' '+y+')'} opacity={interpolate(progress,[0,1],[0.25,1],clamp)}>
-    {pieces.map((p,i)=><g key={i} transform={'translate('+p.x+' '+p.y+')'}>
-      <rect x="-48" y="-48" width="96" height="96" rx="18" fill={p.fill} opacity={0.9}/>
-      <circle cx={i%2===0?48:-48} cy="0" r="16" fill={p.fill}/>
-      <circle cx={i%2===0?-48:48} cy="0" r="16" fill={C.bg}/>
-    </g>)}
-  </g>;
-};
-
-const Brain = ({scale=1, glow=0}: {scale?:number;glow?:number}) => (
-  <g transform={'scale('+scale+')'}>
-    <path d="M-170 35 C-205-80-125-170-20-145 C55-205 165-145 145-55 C205 20 145 125 45 105 C-20 160-125 125-170 35Z"
-      fill={C.panel} stroke={C.cyan} strokeWidth="8"/>
-    <path d="M-95-65 C-45-105-25-35-70 0 C-20 35-45 95-95 60 M5-120 C-35-55 35-35 0 15 C-35 70 20 105 65 65 M75-95 C35-45 105-20 70 20 C55 55 105 75 120 45"
-      fill="none" stroke={C.pink} strokeWidth="10" strokeLinecap="round"/>
-    <circle cx="0" cy="0" r={20+glow*18} fill={C.yellow} opacity={0.65+glow*0.3}/>
+function Professor({x=960,y=650,scale=1,rot=0,flip=false,arm=0,panic=0}:{x?:number;y?:number;scale?:number;rot?:number;flip?:boolean;arm?:number;panic?:number}) {
+ return <g transform={`translate(${x} ${y}) rotate(${rot}) scale(${flip?-scale:scale} ${scale})`}>
+  <g transform={`translate(${Math.sin(panic*30)*8} ${Math.abs(Math.sin(panic*20))*6})`}>
+   <path d="M-105-145 L-130-185 L-92-168 L-76-210 L-48-174 L-15-215 L4-174 L42-203 L48-163 L91-184 L76-140Z" fill={C.ink}/>
+   <ellipse cx="0" cy="-72" rx="94" ry="91" fill={C.cream} stroke={C.ink} strokeWidth="7"/>
+   <g stroke={C.ink} strokeWidth="7" fill={C.white}><circle cx="-43" cy="-72" r="34"/><circle cx="43" cy="-72" r="34"/><path d="M-9-72H9"/></g>
+   <circle cx="-43" cy="-72" r="9" fill={C.ink}/><circle cx="43" cy="-72" r="9" fill={C.ink}/>
+   <path d="M-17-31 Q0-20 17-31" fill="none" stroke={C.ink} strokeWidth="6" strokeLinecap="round"/>
+   <path d="M-68 14 Q0-10 68 14 L82 180 Q0 205-82 180Z" fill={C.white} stroke={C.ink} strokeWidth="7"/>
+   <path d="M0 18 L-18 70 L0 180 L18 70Z" fill={C.yellow}/>
+   <path d={`M-78 30 Q-125 ${20-arm*45} -145 ${-5-arm*60}`} fill="none" stroke={C.white} strokeWidth="34" strokeLinecap="round"/>
+   <path d={`M78 30 Q125 ${20+arm*45} 145 ${-5+arm*60}`} fill="none" stroke={C.white} strokeWidth="34" strokeLinecap="round"/>
+   <path d="M-55 180 L-62 250 M55 180 L62 250" stroke={C.ink} strokeWidth="25" strokeLinecap="round"/>
   </g>
-);
+ </g>;
+}
+function Eye({scale=1,blind=false}:{scale?:number;blind?:boolean}){return <g transform={`scale(${scale})`}><path d="M-270 0 Q0-170 270 0 Q0 170-270 0Z" fill={C.cream} stroke={C.ink} strokeWidth="9"/><circle r="86" fill={C.cyan} stroke={C.ink} strokeWidth="8"/><circle r="43" fill={C.ink}/><circle cx="-15" cy="-15" r="13" fill={C.white}/>{blind&&<circle cx="120" r="38" fill={C.ink} stroke={C.pink} strokeWidth="7" strokeDasharray="9 8"/>}</g>;}
+function Retina({scale=1}:{scale?:number}){const cells=Array.from({length:55},(_,i)=>({x:(i%11)*62-310,y:Math.floor(i/11)*62-120}));return <g transform={`scale(${scale})`}><path d="M-370-150 Q0-260 370-150 L330 150 Q0 250-330 150Z" fill={C.pink} opacity=".25" stroke={C.cream} strokeWidth="7"/>{cells.map((p,i)=><circle key={i} cx={p.x} cy={p.y} r="17" fill={i===31?C.ink:C.cyan} opacity={i===31?1:.8}/>)}<circle cx="250" r="55" fill={C.ink} stroke={C.yellow} strokeWidth="8"/><path d="M250 0 C420 0 470 120 620 120" fill="none" stroke={C.yellow} strokeWidth="12"/></g>;}
+function Caption({children,y=110,size=44}:{children:React.ReactNode;y?:number;size?:number}){return <text x="960" y={y} textAnchor="middle" fill={C.white} fontSize={size} fontWeight="800" letterSpacing="1">{children}</text>;}
 
-const Eye = ({blink=0}: {blink?:number}) => (
-  <g>
-    <path d={'M-270 0 Q0 '+(-155+blink*150)+' 270 0 Q0 '+(155-blink*150)+' -270 0Z'} fill={C.panel} stroke={C.cyan} strokeWidth="8"/>
-    <circle cx="0" cy="0" r="72" fill={C.white}/>
-    <circle cx="0" cy="0" r="38" fill={C.pink}/>
-    <circle cx="0" cy="0" r="15" fill={C.bg}/>
-  </g>
-);
-
-export const Explainer: React.FC = () => {
-  const f = useCurrentFrame();
-  const scene = Math.min(scenes.length - 1, Math.floor(f / 300));
-  const local = f % 300;
-  const s = scenes[scene];
-  const inP = interpolate(local,[0,35],[0,1],clamp);
-  const outP = interpolate(local,[255,299],[1,0],clamp);
-  const textOpacity = Math.min(inP,outP);
-  const progress = interpolate(f,[0,scenes.length*300],[0,1],clamp);
-  const drift = Math.sin(f/24)*18;
-  const pulse = 1 + Math.sin(f/18)*0.045;
-
-  let visual: React.ReactNode;
-  if (s.kind === 'hook') visual = <><g transform={'translate(960 390) scale('+pulse+')'}><Brain scale={1.05} glow={1}/></g><Puzzle progress={0.25} x={960} y={720}/></>;
-  else if (s.kind === 'eye') visual = <g transform={'translate(960 475)'}><Eye blink={s.title==='NOW MOVE YOUR EYES'?Math.abs(Math.sin(local/18)):0}/></g>;
-  else if (s.kind === 'blindspot') visual = <><g transform="translate(650 450)"><Eye/></g><circle cx="1300" cy="450" r="70" fill={C.panel} stroke={C.yellow} strokeWidth="8" strokeDasharray="14 12"/><path d="M1050 450H1220" stroke={C.yellow} strokeWidth="8"/><text x="1245" y="555" fill={C.yellow} fontSize="32" fontWeight="800">MISSING INPUT</text></>;
-  else if (s.kind === 'memory') visual = <><g transform={'translate(960 430) scale('+pulse+')'}><Brain scale={1} glow={0.7}/></g><g opacity=".75">{[0,1,2,3].map(i=><rect key={i} x={470+i*290} y={690+(i%2)*30} width="220" height="90" rx="18" fill={C.panel} stroke={i===2?C.pink:C.cyan} strokeWidth="5"/>)}</g></>;
-  else if (s.kind === 'attention') visual = <><g transform={'translate(960 450)'}><circle r="270" fill={C.panel}/>{Array.from({length:14}).map((_,i)=>{const a=i*Math.PI*2/14;return <circle key={i} cx={Math.cos(a)*230} cy={Math.sin(a)*230} r={i===Math.floor(local/22)%14?26:12} fill={i===Math.floor(local/22)%14?C.yellow:C.cyan} opacity={i===Math.floor(local/22)%14?1:.45}/>})}<circle r="90" fill="none" stroke={C.pink} strokeWidth="8"/></g></>;
-  else if (s.kind === 'illusion') visual = <><g transform={'translate(960 450) rotate('+(local/18-8)+')'}>{[0,1,2,3,4,5,6,7].map(i=><rect key={i} x={-260+i*75} y={i%2?-110:20} width="48" height="190" rx="18" fill={i%2?C.cyan:C.pink}/>)}</g><circle cx="960" cy="450" r="35" fill={C.yellow}/></>;
-  else if (s.kind === 'prediction') visual = <><g transform={'translate(960 450) scale('+pulse+')'}><Brain scale={1} glow={0.9}/></g><g opacity=".8"><path d="M430 720 C650 610 760 720 960 610 S1270 510 1490 650" fill="none" stroke={C.yellow} strokeWidth="9" strokeDasharray="22 18"/><circle cx={960+drift*3} cy="610" r="24" fill={C.green}/></g></>;
-  else visual = <><g transform={'translate(960 440) scale('+pulse+')'}><Brain scale={1.05} glow={1}/></g><Puzzle progress={progress} x={960} y={735}/></>;
-
-  return <AbsoluteFill style={{background:C.bg,fontFamily:'Arial, sans-serif',overflow:'hidden'}}>
-    <svg width="100%" height="100%" viewBox="0 0 1920 1080">
-      <defs>
-        <pattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse"><path d="M80 0H0V80" fill="none" stroke="white" strokeOpacity=".045" strokeWidth="2"/></pattern>
-      </defs>
-      <rect width="1920" height="1080" fill="url(#grid)"/>
-      <g transform={'translate(0 '+(Math.sin(f/55)*8)+')'}>{visual}</g>
-      <g opacity={textOpacity}>
-        <rect x="100" y="825" width="1720" height="175" rx="30" fill={C.panel} opacity=".96"/>
-        <text x="150" y="895" fill={C.white} fontSize="55" fontWeight="900">{s.title}</text>
-        <text x="150" y="950" fill={C.cyan} fontSize="31" fontWeight="600">{s.sub}</text>
-      </g>
-      <text x="150" y="75" fill={C.muted} fontSize="25" fontWeight="700">AI EXPLAINER STUDIO  •  THE BRAIN</text>
-      <text x="1770" y="75" textAnchor="end" fill={C.muted} fontSize="25" fontWeight="700">{String(scene+1).padStart(2,'0')} / {scenes.length}</text>
-      <rect x="150" y="1015" width="1620" height="5" rx="3" fill={C.panel}/>
-      <rect x="150" y="1015" width={1620*progress} height="5" rx="3" fill={C.yellow}/>
-    </svg>
-  </AbsoluteFill>;
-};
+function Scene({id,local}:{id:number;local:number}){
+ const p=local/899;
+ if(id===0)return <g><rect width="1920" height="1080" fill={C.cream}/><rect x="90" y="90" width="1740" height="900" rx="55" fill="#dfe7ef" stroke={C.ink} strokeWidth="9"/><rect x="130" y="130" width="1660" height="650" rx="35" fill="#a9d8e8"/><rect x="170" y="690" width="1580" height="240" rx="30" fill="#8f7359"/><rect x="1380" y="350" width="250" height="360" rx="20" fill="#6b7890"/><circle cx={p<.45?1120:1220} cy={p<.45?590:610} r="45" fill={C.red}/><path d="M1120 590 Q1250 600 1380 530" fill="none" stroke={C.red} strokeWidth="10" strokeDasharray="18 15" opacity={p>.2?1:0}/><Professor x={700+p*220} y={650} scale={.78} rot={Math.sin(local/16)*2} arm={.2}/><Caption y={90} size={52}>YOUR BRAIN IS LYING TO YOU.</Caption></g>;
+ if(id===1)return <g><rect width="1920" height="1080" fill="#121a31"/><circle cx="960" cy="520" r="420" fill="#1b2946"/>{Array.from({length:18},(_,i)=>{const a=i*Math.PI*2/18;return <circle key={i} cx={960+Math.cos(a)*340} cy={520+Math.sin(a)*240} r={i%3===0?28:12} fill={i%2?C.cyan:C.pink} opacity=".8"/>})}<circle cx="960" cy="520" r="28" fill={C.yellow}/><path d="M960 520 C800 450 700 580 590 520" fill="none" stroke={C.yellow} strokeWidth="8" strokeDasharray="16 16"/><Professor x={960} y={760} scale={.8} arm={.5}/><Caption y={115}>WHAT DOES YOUR BRAIN ACTUALLY RECEIVE?</Caption><g transform="translate(960 300)"><Eye scale={.62}/></g></g>;
+ if(id===2)return <g><rect width="1920" height="1080" fill={C.night}/><g transform={`translate(${960+(p-.5)*700} 490) scale(${1.1+p*.7})`}><Eye/></g><g transform={`translate(${760+p*100} 490)`} opacity={p<.45?1:0}><circle r="20" fill={C.yellow}/><circle cx="360" r="12" fill={C.pink}/></g><g transform={`translate(960 490) scale(${1.1+p*.7})`} opacity={p>.48?1:0}><circle cx="220" r="42" fill={C.ink} stroke={C.yellow} strokeWidth="7" strokeDasharray="10 8"/></g><Professor x={960} y={820} scale={.72} rot={p>.55?Math.sin(local/7)*3:0} arm={p>.55?1:.1}/><Caption y={105}>YOU CAN'T SEE THE WHOLE WORLD.</Caption>{p>.55&&<text x="960" y="980" textAnchor="middle" fill={C.yellow} fontSize="32" fontWeight="800">THERE IS A HOLE IN YOUR VISION.</text>}</g>;
+ if(id===3)return <g><rect width="1920" height="1080" fill="#1b2038"/><g transform={`translate(960 470) scale(${1+p*1.3})`}><Eye/></g><g transform={`translate(960 470) scale(${1+p*1.3})`} opacity={p>.2?1:0}><path d="M-160 0 Q0-120 160 0 Q0 120-160 0Z" fill={C.cream} stroke={C.ink} strokeWidth="7"/><circle r="42" fill={C.cyan}/><circle r="20" fill={C.ink}/></g><g transform={`translate(960 470) scale(${p<.55?1:interpolate(local,[500,899],[1,2.8],clamp)})`}><Retina scale={.72}/></g><Professor x={600} y={800} scale={.62} arm={.8}/><Caption y={105}>THE OPTIC NERVE HAS TO LEAVE SOMEWHERE.</Caption></g>;
+ if(id===4)return <g><rect width="1920" height="1080" fill="#0d1629"/><g transform={`translate(960 470) scale(${1+p*1.4})`}><Retina scale={.75}/></g><path d="M1210 470 C1450 470 1530 650 1740 650" fill="none" stroke={C.yellow} strokeWidth="16" strokeLinecap="round"/><circle cx="1210" cy="470" r="64" fill={C.ink} stroke={C.pink} strokeWidth="10" strokeDasharray="14 12"/><g transform={`translate(${700+p*520} ${820-p*350}) rotate(${p*360}) scale(${1-p*.4})`}><Professor scale={.7} panic={p} rot={Math.sin(local/6)*8} arm={1}/></g>{p>.65&&<text x="960" y="180" textAnchor="middle" fill={C.white} fontSize="34" fontWeight="800">NO RODS. NO CONES. NO SIGNAL.</text>}</g>;
+ if(id===5)return <g><rect width="1920" height="1080" fill="#10253a"/><path d="M0 720 Q480 500 960 720 T1920 720 V1080 H0Z" fill="#24465a"/><path d="M0 260 Q480 80 960 260 T1920 260 V720 Q1440 520 960 720 T0 720Z" fill="#76c9e5" opacity=".55"/><circle cx="480" cy="470" r="65" fill={C.ink} stroke={C.pink} strokeWidth="9" strokeDasharray="13 10"/><path d="M100 470 H860" stroke={C.cream} strokeWidth="16" strokeLinecap="round"/><path d="M860 470 C1050 470 1100 300 1300 300" fill="none" stroke={C.cream} strokeWidth="16" strokeLinecap="round"/><g opacity={p<.3?0:1}><path d="M100 470 H1400" stroke={C.yellow} strokeWidth="9" strokeDasharray="18 15"/><circle cx={480+Math.min(p,.7)*700} cy="470" r="36" fill={C.yellow}/></g><Professor x={700} y={780} scale={.72} arm={p>.45?1:.2}/><Caption y={100}>THE WORLD LOOKS COMPLETE.</Caption><text x="960" y="960" textAnchor="middle" fill={C.cream} fontSize="31" fontWeight="700">YOUR BRAIN CAN USE THE SURROUNDING PATTERN.</text></g>;
+ if(id===6)return <g><rect width="1920" height="1080" fill="#261c3e"/><g transform={`translate(960 510) scale(${1+p*.55})`}><rect x="-620" y="-320" width="1240" height="640" rx="50" fill="#4c426d" stroke={C.cream} strokeWidth="8"/>{Array.from({length:10},(_,i)=><rect key={i} x={-520+i*110} y={-220+(i%2)*170} width="70" height="70" rx="15" fill={i%2?C.cyan:C.yellow}/>)}<rect x="380" y="-170" width="140" height="140" fill={C.pink} rx="20"/><path d="M-620 0 H620" stroke={C.cream} strokeWidth="8" opacity=".4"/></g><g transform={`translate(${500+p*920} ${780-p*260}) rotate(${Math.sin(local/9)*5}) scale(.72)`}><Professor scale={.9} arm={1} panic={p}/></g><Caption y={95}>NOW THE QUESTION GETS BIGGER.</Caption>{p>.35&&<text x="960" y="970" textAnchor="middle" fill={C.yellow} fontSize="36" fontWeight="900">WHAT ELSE IS YOUR BRAIN GUESSING?</text>}</g>;
+ if(id===7)return <g><rect width="1920" height="1080" fill="#102033"/><g transform="translate(960 500)"><rect x="-700" y="-330" width="1400" height="660" rx="70" fill="#263b51" stroke={C.cream} strokeWidth="8"/><g transform={`rotate(${p*360})`}><rect x="-320" y="-70" width="280" height="140" rx="25" fill={C.cyan}/><rect x="40" y="-70" width="280" height="140" rx="25" fill={C.pink}/></g><rect x="-30" y="-70" width="60" height="140" rx="15" fill={C.yellow}/></g><Professor x={960} y={820} scale={.7} arm={p>.55?1:.2}/><Caption y={100}>SAME SHAPES. DIFFERENT CONTEXT.</Caption><text x="960" y="960" textAnchor="middle" fill={C.cream} fontSize="34" fontWeight="700">YOUR BRAIN ISN'T JUST READING THE IMAGE.</text></g>;
+ if(id===8)return <g><rect width="1920" height="1080" fill="#182b25"/><rect y="650" width="1920" height="430" fill="#274b3e"/>{Array.from({length:18},(_,i)=>{const x=80+i*110;return <g key={i}><rect x={x} y={420-(i%4)*25} width="70" height="230" rx="12" fill={i%2?C.pink:C.cyan}/><circle cx={x+35} cy={390-(i%4)*25} r="30" fill={C.yellow}/></g>})}<g transform={`translate(${650+p*650} 730) scale(.65)`}><Professor arm={1} panic={p*.3}/></g><circle cx="960" cy="500" r={120+Math.sin(local/10)*8} fill="none" stroke={C.yellow} strokeWidth="9"/><Caption y={95}>YOU CAN LOOK DIRECTLY AT SOMETHING — AND MISS IT.</Caption>{p>.5&&<text x="960" y="990" textAnchor="middle" fill={C.white} fontSize="34" fontWeight="800">ATTENTION IS A FILTER, NOT A RECORDING.</text>}</g>;
+ if(id===9)return <g><rect width="1920" height="1080" fill="#211b36"/><g transform="translate(960 510)"><rect x="-650" y="-350" width="1300" height="700" rx="55" fill="#3c3155" stroke={C.cream} strokeWidth="8"/><g transform={`translate(${-230+p*460} 0)`}><rect x="-170" y="-120" width="340" height="240" rx="25" fill="#7893a8"/><circle cy="-20" r="55" fill={C.cream}/><circle cy="-20" r="28" fill={C.ink}/></g><g opacity={p>.55?1:.3} transform={`translate(${250-p*180} 0)`}><rect x="-170" y="-120" width="340" height="240" rx="25" fill="#7893a8"/><circle cy="-20" r="55" fill={C.cream}/><circle cy="-20" r="28" fill={C.ink}/></g></g><g transform={`translate(960 ${820-p*130}) scale(.72)`}><Professor arm={p>.4?1:.1}/></g><Caption y={100}>MEMORY FEELS LIKE PLAYBACK.</Caption><text x="960" y="970" textAnchor="middle" fill={C.yellow} fontSize="38" fontWeight="900">IT'S CLOSER TO RECONSTRUCTION.</text></g>;
+ return <g><rect width="1920" height="1080" fill="#0b1324"/>{Array.from({length:70},(_,i)=>{const x=((i*173+427)%1500)+210,y=((i*97+301)%700)+170;return <circle key={i} cx={x} cy={y} r={2+(i%4)*2} fill={i%3===0?C.yellow:C.cyan} opacity=".65"/>})}<g transform={`translate(960 500) scale(${1.1+p*.3})`}><circle r="350" fill="#162743" stroke={C.cyan} strokeWidth="8"/><Eye scale=".7"/><g transform="translate(0 310)"><path d="M-170 35 C-205-80-125-170-20-145 C55-205 165-145 145-55 C205 20 145 125 45 105 C-20 160-125 125-170 35Z" fill={C.night} stroke={C.pink} strokeWidth="8"/></g><path d="M-280 0 Q0 180 280 0" fill="none" stroke={C.yellow} strokeWidth="11" strokeDasharray="20 15"/></g><g transform={`translate(960 ${850-p*90}) scale(.62)`}><Professor arm={1}/></g><Caption y={90} size={48}>YOUR BRAIN ISN'T A CAMERA.</Caption><text x="960" y="975" textAnchor="middle" fill={C.cream} fontSize="35" fontWeight="700">IT BUILDS A USEFUL MODEL FROM INCOMPLETE INFORMATION.</text></g>;
+}
+export const Explainer:React.FC=()=>{const f=useCurrentFrame();const scene=Math.min(10,Math.floor(f/900));const local=f%900;const fi=interpolate(local,[0,35],[0,1],clamp);const fo=interpolate(local,[855,899],[1,0],clamp);return <AbsoluteFill style={{background:C.ink,overflow:'hidden'}}><svg width="100%" height="100%" viewBox="0 0 1920 1080"><g opacity={Math.min(fi,fo)}><Scene id={scene} local={local}/></g><rect width="1920" height="1080" fill="none" stroke={C.ink} strokeWidth="18"/></svg></AbsoluteFill>;};
