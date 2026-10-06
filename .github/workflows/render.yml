@@ -2,6 +2,8 @@ name: Render explainer
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
 
 jobs:
   render-chunks:
