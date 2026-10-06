@@ -40,7 +40,7 @@ jobs:
       - name: Build ambient music
         run: |
           ffmpeg -y -f lavfi -i "aevalsrc=0.035*(sin(2*PI*55*t)+0.42*sin(2*PI*82.5*t)+0.22*sin(2*PI*110*t))*(0.62+0.38*sin(2*PI*t/31)):s=48000:d=600" -af "lowpass=f=1000,afade=t=in:st=0:d=10,afade=t=out:st=585:d=15" -ar 48000 -ac 2 public/audio/music.wav
-          ffmpeg -y -f lavfi -i "aevalsrc=0.08*(if(lt(mod(t,8),0.6),exp(-7*mod(t,8))*sin(2*PI*520*t),0)+if(lt(mod(t,13),1.0),exp(-5*mod(t,13))*sin(2*PI*170*t),0)):s=48000:d=600" -ar 48000 -ac 2 public/audio/fx.wav
+          ffmpeg -y -f lavfi -i "sine=frequency=520:duration=600" -af "volume=0.006,afade=t=in:st=0:d=2,afade=t=out:st=595:d=5" -ar 48000 -ac 2 public/audio/fx.wav
       - uses: actions/upload-artifact@v4
         with:
           name: explainer-audio
