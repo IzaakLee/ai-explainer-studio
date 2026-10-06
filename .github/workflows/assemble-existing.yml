@@ -1,0 +1,56 @@
+name: Assemble existing render
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: "GitHub Actions run ID containing the rendered chunks"
+        required: true
+        default: "37433924459"
+
+jobs:
+  assemble:
+    name: Assemble existing chunks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - name: Install FFmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+
+      - name: Download existing chunks
+        uses: actions/download-artifact@v4
+        with:
+          run-id: ${{ inputs.run_id }}
+          github-token: ${{ github.token }}
+          pattern: explainer-chunk-*
+          path: chunks
+          merge-multiple: true
+
+      - name: Verify all chunks
+        run: |
+          set -e
+          for i in $(seq 0 10); do
+            test -s "chunks/chunk-${i}.mp4"
+          done
+          ls -lh chunks/chunk-*.mp4
+
+      - name: Assemble MP4
+        run: |
+          set -e
+          for i in $(seq 0 10); do
+            printf "file '%s'\n" "chunks/chunk-${i}.mp4"
+          done > chunks.txt
+          ffmpeg -y -f concat -safe 0 -i chunks.txt -c copy out.mp4
+          ffprobe -v error -show_entries format=duration,size -of default=noprint_wrappers=1 out.mp4
+
+      - name: Upload final preview
+        uses: actions/upload-artifact@v4
+        with:
+          name: explainer-preview
+          path: out.mp4
+          retention-days: 7
