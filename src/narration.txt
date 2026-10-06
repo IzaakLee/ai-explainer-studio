@@ -1,0 +1,331 @@
+Imagine you fall into a black hole.
+
+Your friend watches from far away.
+
+You both watch the same event.
+
+But your stories seem to disagree.
+
+To your friend, you never quite cross the horizon.
+
+To you, you cross it.
+
+Neither of you is simply wrong.
+
+That is the weird part.
+
+And yes, our rubber duck is going first.
+
+Do not worry. It has signed absolutely no paperwork.
+
+Before we fall, let us destroy the biggest black-hole myth.
+
+A black hole is not a cosmic vacuum cleaner.
+
+If the Sun suddenly became a black hole with exactly the same mass, Earth would keep orbiting almost exactly as before.
+
+The sky would still have the same stars.
+
+The orbit would still work.
+
+But our daylight would be gone.
+
+So the dangerous part is not that a black hole sucks harder.
+
+It is that an enormous amount of mass has been packed into a ridiculously small region.
+
+Compress Earth down to roughly nine millimeters.
+
+That is its Schwarzschild radius.
+
+Compress the Sun down to about 2.95 kilometers.
+
+Now you have a black hole.
+
+Our Professor looks at that number.
+
+Then at his tiny calculator.
+
+Then back at the number.
+
+He has decided mathematics is personally attacking him.
+
+So what is the horizon?
+
+Think about a river.
+
+You are swimming downstream.
+
+At first, you can swim back.
+
+Then the river gets faster.
+
+Eventually you reach a waterfall.
+
+There is a point where even your fastest swimming cannot beat the flow.
+
+The event horizon is like that, but the thing flowing is spacetime itself.
+
+Inside it, every possible future points deeper inward.
+
+Even light cannot find a path back out.
+
+Now watch what happens as we approach.
+
+The black hole itself is completely dark.
+
+But if gas is falling toward it, the gas can become unbelievably hot.
+
+It forms an accretion disk.
+
+And this disk is not simply a flat glowing plate.
+
+Gravity bends its light.
+
+Part of the disk appears above the hole.
+
+Part appears below it.
+
+Some of the light makes a huge curved journey before reaching your eyes.
+
+The stars behind the black hole get stretched into arcs.
+
+And near the photon sphere, light can loop around the black hole.
+
+That creates one of the strangest views in the universe.
+
+In principle, some light from behind you can be bent around the hole and reach your eyes from the front.
+
+So for a moment, the Professor can see the back of his own head.
+
+He is delighted.
+
+Then he remembers that this is happening next to a black hole.
+
+Delight canceled.
+
+Now let us send Bob outside.
+
+Bob is our one-eyed drone.
+
+He has one job.
+
+Watch you fall.
+
+He has chosen the safest possible career.
+
+You send Bob a clock.
+
+Your clock ticks once every second.
+
+His clock does too.
+
+But as you fall deeper into the gravitational field, the signals Bob receives take longer and longer to arrive.
+
+They also lose energy.
+
+The light becomes more and more redshifted.
+
+Your messages stretch.
+
+Your clock appears slower.
+
+And eventually your signals become so faint that Bob cannot keep receiving a normal sequence showing you crossing the horizon.
+
+From Bob's viewpoint, your approach seems to freeze and fade away.
+
+But here comes the crucial twist.
+
+You do not experience yourself freezing.
+
+Your own clock keeps ticking normally.
+
+You fall through the horizon after a finite amount of your own proper time.
+
+There is no solid wall waiting there.
+
+For a sufficiently large black hole, you might cross the horizon without feeling anything special at that exact moment.
+
+The Professor has reached the horizon.
+
+He holds up two masks.
+
+One says OUTSIDE.
+
+The other says INSIDE.
+
+He looks at both.
+
+Then he puts one on each face.
+
+Yes, this is the scientifically approved way to demonstrate relativity.
+
+Probably.
+
+Now something more violent happens.
+
+Gravity is stronger closer to the black hole than farther away.
+
+Your feet are pulled harder than your head.
+
+The difference is called a tidal force.
+
+Imagine a giant invisible hand stretching you from both ends.
+
+The duck becomes a noodle.
+
+The Professor becomes a much less dignified noodle.
+
+For a small stellar-mass black hole, tidal forces near the horizon can be catastrophic.
+
+For a supermassive black hole, the horizon can be surprisingly gentle.
+
+The bigger the black hole, the weaker the tidal gradient at its horizon can be.
+
+So the size of the black hole changes how dramatic your first encounter is.
+
+But falling farther in is another story.
+
+The horizon is not the center.
+
+It is only the boundary of no return.
+
+Deeper inside, every future-directed path leads inward.
+
+There is no normal road that turns around and leaves.
+
+Imagine an escalator that is carrying the entire future downward.
+
+You can walk up the escalator.
+
+But as you get closer to the center, the downward motion becomes unavoidable.
+
+And eventually the geometry itself gives you no escape route.
+
+This is where our picture of space starts breaking.
+
+At the center of the simplest classical black-hole solution is a singularity.
+
+Our equations predict that density and curvature become extreme.
+
+But this is also where we should be honest.
+
+A singularity may be telling us that general relativity has reached the edge of what it can describe.
+
+We do not yet have a complete theory of quantum gravity.
+
+So when someone says, "We know exactly what happens at the singularity," the scientifically honest answer is: not yet.
+
+And now we reach an even stranger problem.
+
+What happens to information?
+
+Quantum physics treats information as something that cannot simply disappear.
+
+But black holes can evaporate through Hawking radiation.
+
+Very slowly.
+
+For a stellar-mass black hole, the timescale is absurd.
+
+Numbers like ten to the sixty-seventh years can appear in estimates for evaporation times.
+
+That is vastly longer than the current age of the universe.
+
+The Professor checks his watch.
+
+Then checks again.
+
+He has discovered a schedule conflict.
+
+But the deeper question remains.
+
+If the black hole eventually disappears, what happened to everything that fell inside?
+
+Did the information come back out?
+
+Was it encoded in the radiation?
+
+Is the horizon somehow storing a description of what fell in?
+
+This is part of the black-hole information problem.
+
+And it connects black holes to one of the wildest ideas in modern physics.
+
+Maybe the information describing a volume of space can be represented on a lower-dimensional boundary.
+
+That family of ideas is often called holography.
+
+It does not mean the universe is literally a giant hologram projector.
+
+It means that gravity, quantum mechanics, space, and information may have a relationship much stranger than our everyday intuition suggests.
+
+So let us rewind.
+
+Same fall.
+
+Same Professor.
+
+Same duck.
+
+Two observers.
+
+Bob stays outside.
+
+He receives signals that slow, redden, and fade.
+
+He never watches a normal finite-time movie of you crossing the horizon.
+
+You fall inward.
+
+Your own clock reaches the horizon after finite proper time.
+
+If the black hole is large enough, the crossing itself can be locally uneventful.
+
+Then tidal forces eventually become the real problem.
+
+These are not two different universes.
+
+They are two different descriptions based on different observers and different measurements.
+
+Reality is not arbitrary.
+
+But the story you can tell about an event depends on where you are and what information can reach you.
+
+And that is the part that makes black holes more than cosmic monsters.
+
+They are laboratories for asking what time means.
+
+What space means.
+
+What information means.
+
+And maybe even what it means for two people to agree on what happened.
+
+The Professor looks at the duck.
+
+The duck looks back.
+
+The Professor slowly pushes it toward the black hole.
+
+One final experiment.
+
+The duck falls.
+
+The outside signal fades.
+
+The screen goes dark.
+
+Then, impossibly softly, a tiny flash appears.
+
+Hawking radiation.
+
+Not an answer.
+
+A question.
+
+If the black hole can eventually evaporate, where did the story of everything that fell inside go?
+
+And if physics can answer that someday, we may learn something even stranger than what happens when you fall into a black hole.
+
+We may learn what reality was keeping secret all along.
