@@ -6,8 +6,56 @@ on:
     branches: [main]
 
 jobs:
+  prepare-audio:
+    name: Prepare narration, music and SFX
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install audio tools
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg espeak
+      - name: Build narration
+        run: |
+          mkdir -p public/audio
+          espeak -v en-us+m3 -s 145 -p 48 -a 145 -f NARRATION.txt -w public/audio/raw.wav
+          DUR=$(ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 public/audio/raw.wav)
+          RATIO=$(python3 -c "d=float('$DUR'); print(max(0.5,min(2.0,d/600.0)))")
+          ffmpeg -y -i public/audio/raw.wav -filter:a "atempo=$RATIO,apad,atrim=0:600" -ar 24000 -ac 1 public/audio/narration.wav
+          rm public/audio/raw.wav
+      - name: Build captions from narration
+        run: |
+          python3 - <<'PY'
+          import re, pathlib
+          text=pathlib.Path("NARRATION.txt").read_text()
+          words=re.findall(r"\S+", text)
+          n=40
+          chunks=[]
+          for i in range(n):
+              a=round(i*len(words)/n)
+              b=round((i+1)*len(words)/n)
+              chunks.append(" ".join(words[a:b]))
+          out="export const CAPTIONS = "+repr(chunks).replace("'", '"')+" as const;\n"
+          pathlib.Path("src/captions.ts").write_text(out)
+          PY
+      - name: Build ambient music
+        run: |
+          ffmpeg -y -f lavfi -i "aevalsrc=0.055*(sin(2*PI*55*t)+0.55*sin(2*PI*82.5*t)+0.32*sin(2*PI*110*t))*(0.55+0.45*sin(2*PI*t/31)):s=24000:d=600" -af "lowpass=f=900,afade=t=in:st=0:d=8,afade=t=out:st=585:d=15" -ar 24000 -ac 1 public/audio/music.wav
+          ffmpeg -y -f lavfi -i "aevalsrc=0.10*(if(lt(mod(t,9),0.8),exp(-4*mod(t,9))*sin(2*PI*440*t),0)+if(lt(mod(t,17),1.2),exp(-3*mod(t,17))*sin(2*PI*330*t),0)):s=24000:d=600" -ar 24000 -ac 1 public/audio/fx.wav
+      - name: Upload audio bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: explainer-audio
+          path: |
+            public/audio/narration.wav
+            public/audio/music.wav
+            public/audio/fx.wav
+            src/captions.ts
+          retention-days: 1
+
   render-chunks:
     name: Render chunk ${{ matrix.chunk }}
+    needs: prepare-audio
     runs-on: ubuntu-24.04
     timeout-minutes: 12
     strategy:
@@ -17,30 +65,28 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
+      - name: Download prepared audio
+        uses: actions/download-artifact@v4
+        with:
+          name: explainer-audio
+          path: .
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
-
       - name: Install dependencies
         run: npm install --no-audit --no-fund
-
       - name: Typecheck
         run: npm run check
-
       - name: Ensure Remotion browser
         run: npx remotion browser ensure
-
       - name: Render chunk
         env:
           CHUNK: ${{ matrix.chunk }}
         run: |
           START=$((CHUNK * 900))
           END=$((START + 899))
-          if [ "$CHUNK" -eq 19 ]; then END=17999; fi
           npx remotion render src/index.tsx Explainer "out/chunk-${CHUNK}.mp4" --frames="${START}-${END}" --concurrency=4 --chrome-mode=headless-shell --x264-preset=faster --log=info
-
       - name: Upload chunk
         uses: actions/upload-artifact@v4
         with:
@@ -60,17 +106,14 @@ jobs:
           pattern: explainer-chunk-*
           path: chunks
           merge-multiple: true
-
       - name: Install FFmpeg
         run: sudo apt-get update && sudo apt-get install -y ffmpeg
-
       - name: Assemble MP4
         run: |
           for i in $(seq 0 19); do
-            printf "file '%s'\\n" "chunks/chunk-${i}.mp4"
+            printf "file '%s'\n" "chunks/chunk-${i}.mp4"
           done > chunks.txt
           ffmpeg -y -f concat -safe 0 -i chunks.txt -c copy out.mp4
-
       - name: Upload final preview
         uses: actions/upload-artifact@v4
         with:
