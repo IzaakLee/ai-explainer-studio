@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        chunk: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        chunk: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -38,7 +38,7 @@ jobs:
         run: |
           START=$((CHUNK * 900))
           END=$((START + 899))
-          if [ "$CHUNK" -eq 10 ]; then END=9899; fi
+          if [ "$CHUNK" -eq 19 ]; then END=17999; fi
           npx remotion render src/index.tsx Explainer "out/chunk-${CHUNK}.mp4" --frames="${START}-${END}" --concurrency=4 --chrome-mode=headless-shell --x264-preset=faster --log=info
 
       - name: Upload chunk
@@ -66,7 +66,7 @@ jobs:
 
       - name: Assemble MP4
         run: |
-          for i in $(seq 0 10); do
+          for i in $(seq 0 19); do
             printf "file '%s'\\n" "chunks/chunk-${i}.mp4"
           done > chunks.txt
           ffmpeg -y -f concat -safe 0 -i chunks.txt -c copy out.mp4
