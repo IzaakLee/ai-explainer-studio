@@ -12,18 +12,24 @@ const fade=(f:number,a=0,b=45)=>interpolate(f,[a,b],[0,1],clamp);
 const out=(f:number,a=0,b=45)=>1-interpolate(f,[a,b],[0,1],clamp);
 
 function Professor({x=960,y=800,s=1,r=0,look=0,arm=0,panic=0,fall=0}:{x?:number;y?:number;s?:number;r?:number;look?:number;arm?:number;panic?:number;fall?:number}){
+  const bob=Math.sin(panic*18)*4;
   return <g transform={`translate(${x} ${y}) rotate(${r+fall*28}) scale(${s})`}>
-    <g transform={`translate(${Math.sin(panic*18)*7} ${Math.abs(Math.sin(panic*14))*5})`}>
-      <path d="M-104-145L-138-185-92-169-72-214-42-174-4-220 15-174 55-208 52-166 101-187 78-142Z" fill={C.ink}/>
-      <ellipse cx="0" cy="-70" rx="96" ry="92" fill={C.paper} stroke={C.ink} strokeWidth="8"/>
-      <g stroke={C.ink} strokeWidth="7" fill={C.white}><circle cx="-43" cy="-70" r="35"/><circle cx="43" cy="-70" r="35"/><path d="M-8-70H8"/></g>
-      <circle cx={-43+look*10} cy="-70" r="10" fill={C.ink}/><circle cx={43+look*10} cy="-70" r="10" fill={C.ink}/>
-      <path d={panic>.35?'M-22-30 Q0-42 22-30':'M-19-27 Q0-16 19-27'} fill="none" stroke={C.ink} strokeWidth="6" strokeLinecap="round"/>
-      <path d="M-72 18 Q0-5 72 18L85 185Q0 210-85 185Z" fill={C.white} stroke={C.ink} strokeWidth="8"/>
-      <path d="M0 19L-19 72 0 185 19 72Z" fill={C.yellow}/>
-      <path d={`M-76 34Q-128 ${22-arm*52}-153 ${-8-arm*65}`} fill="none" stroke={C.white} strokeWidth="34" strokeLinecap="round"/>
-      <path d={`M76 34Q128 ${22+arm*52}153 ${-8+arm*65}`} fill="none" stroke={C.white} strokeWidth="34" strokeLinecap="round"/>
-      <path d="M-57 185L-66 254M57 185L66 254" stroke={C.ink} strokeWidth="26" strokeLinecap="round"/>
+    <g transform={`translate(${bob} ${Math.abs(Math.sin(panic*10))*3})`}>
+      <path d="M-103-139L-145-181-101-173-94-220-55-181-35-226 1-183 36-221 43-179 91-201 76-157 124-151 88-119Z" fill="#25233a" stroke={C.ink} strokeWidth="9" strokeLinejoin="round"/>
+      <path d="M-92-123Q-72-188 0-187Q72-188 93-123L82-43Q67 20 0 31Q-67 20-82-43Z" fill="#f4d4b8" stroke={C.ink} strokeWidth="9"/>
+      <circle cx="-86" cy="-67" r="22" fill="#efc5a9" stroke={C.ink} strokeWidth="7"/><circle cx="86" cy="-67" r="22" fill="#efc5a9" stroke={C.ink} strokeWidth="7"/>
+      <g fill="#eef8ff" fillOpacity=".72" stroke={C.ink} strokeWidth="8"><rect x="-78" y="-106" width="70" height="58" rx="19"/><rect x="8" y="-106" width="70" height="58" rx="19"/><path d="M-8-78H8"/></g>
+      <circle cx={-42+look*9} cy="-77" r="12" fill={C.ink}/><circle cx={42+look*9} cy="-77" r="12" fill={C.ink}/>
+      <path d="M0-48L-7-28 8-25" fill="none" stroke={C.ink} strokeWidth="6" strokeLinecap="round"/>
+      <path d={panic>.35?'M-25-5Q0-25 25-5':'M-23-3Q0 15 23-3'} fill="none" stroke={C.ink} strokeWidth="7" strokeLinecap="round"/>
+      <path d="M-82 20Q-118 34-138 92L-118 245Q0 275 118 245L138 92Q118 34 82 20L48 9 0 48-48 9Z" fill="#fbfaf3" stroke={C.ink} strokeWidth="10" strokeLinejoin="round"/>
+      <path d="M-48 10L0 48 48 10 25 245H-25Z" fill="#f0efe7"/>
+      <path d="M0 48L-22 91 0 246 22 91Z" fill={C.yellow} stroke={C.ink} strokeWidth="5"/>
+      <path d="M-83 43Q-126 48-151 97L-188 142" fill="none" stroke="#fbfaf3" strokeWidth="40" strokeLinecap="round"/>
+      <path d="M83 43Q126 48 151 97L188 142" fill="none" stroke="#fbfaf3" strokeWidth="40" strokeLinecap="round"/>
+      <circle cx="-188" cy="142" r="20" fill="#f4d4b8" stroke={C.ink} strokeWidth="7"/><circle cx="188" cy="142" r="20" fill="#f4d4b8" stroke={C.ink} strokeWidth="7"/>
+      <path d="M-55 246L-70 312M55 246L70 312" stroke={C.ink} strokeWidth="30" strokeLinecap="round"/>
+      <path d="M-89 319Q-69 302-44 319L-35 338H-113Q-118 326-89 319Z" fill="#4a4960" stroke={C.ink} strokeWidth="8"/><path d="M89 319Q69 302 44 319L35 338H113Q118 326 89 319Z" fill="#4a4960" stroke={C.ink} strokeWidth="8"/>
     </g>
   </g>;
 }
@@ -32,7 +38,7 @@ function World({children,zoom=1,tx=0,ty=0}:{children:React.ReactNode;zoom?:numbe
  return <g transform={`translate(${960+tx} ${540+ty}) scale(${zoom}) translate(-960 -540)`}>{children}</g>;
 }
 function Label({children,x=960,y=100,size=42,fill=C.white}:{children:React.ReactNode;x?:number;y?:number;size?:number;fill?:string}){
- return <text x={x} y={y} textAnchor="middle" fill={fill} fontFamily="Arial, sans-serif" fontWeight="900" fontSize={size} letterSpacing="1">{children}</text>;
+ return <g><rect x={x-((String(children).length*size*.29)+28)} y={y-size*.86} width={(String(children).length*size*.58)+56} height={size*1.15} rx={size*.32} fill={C.ink} opacity=".78"/><text x={x} y={y} textAnchor="middle" fill={fill} fontFamily="Arial, sans-serif" fontWeight="900" fontSize={size} letterSpacing=".6">{children}</text></g>;
 }
 function Starfield({n=45,shift=0}){
  return <g>{Array.from({length:n},(_,i)=>{
@@ -42,32 +48,40 @@ function Starfield({n=45,shift=0}){
 }
 function Room({ballX=1100,door=false}:{ballX?:number;door?:boolean}){
  return <g>
-   <rect width="1920" height="1080" fill={C.paper}/>
-   <rect x="90" y="90" width="1740" height="900" rx="52" fill="#d5e5e7" stroke={C.ink} strokeWidth="9"/>
-   <path d="M130 720Q520 610 920 700T1790 680V940H130Z" fill="#866b58"/>
-   <rect x="1380" y="320" width="260" height="410" rx="18" fill="#66768b" stroke={C.ink} strokeWidth="8"/>
-   <rect x="1420" y="360" width="180" height="330" rx="8" fill={door?C.deep:'#9ec7d2'}/>
-   <circle cx={ballX} cy="590" r="43" fill={C.red} stroke={C.ink} strokeWidth="6"/>
-   <path d={`M${ballX-160} 590Q${ballX-90} 560 ${ballX-43} 590`} fill="none" stroke={C.red} strokeWidth="9" opacity=".65"/>
-   <rect x="210" y="310" width="330" height="170" rx="24" fill="#b7cad0" stroke={C.ink} strokeWidth="7"/>
-   <circle cx="280" cy="395" r="35" fill={C.cyan}/><circle cx="370" cy="395" r="35" fill={C.yellow}/><circle cx="460" cy="395" r="35" fill={C.pink}/>
+   <defs><linearGradient id="roomWall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#f6d6bd"/><stop offset=".58" stopColor="#d8b8c9"/><stop offset="1" stopColor="#9b7ca5"/></linearGradient><linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#80647d"/><stop offset="1" stopColor="#3f405d"/></linearGradient></defs>
+   <rect width="1920" height="1080" fill="url(#roomWall)"/>
+   <path d="M0 650Q430 575 890 670T1920 620V1080H0Z" fill="url(#floor)"/>
+   <rect x="122" y="150" width="390" height="300" rx="24" fill="#243b61" stroke={C.ink} strokeWidth="10"/>
+   <path d="M145 380Q250 260 330 355T490 250V430H145Z" fill="#5eb6c5"/><circle cx="420" cy="225" r="38" fill={C.yellow}/>
+   <path d="M315 150V450M122 300H512" stroke={C.ink} strokeWidth="8" opacity=".6"/>
+   <rect x="640" y="210" width="510" height="285" rx="22" fill="#8b5d52" stroke={C.ink} strokeWidth="10"/>
+   {Array.from({length:11},(_,i)=><rect key={i} x={690+i*37} y={285+(i%3)*62} width="26" height={82-(i%3)*8} rx="5" fill={[C.cyan,C.yellow,C.pink,C.teal][i%4]} stroke={C.ink} strokeWidth="4"/>)}
+   <g transform="translate(790 555)"><rect x="-115" width="230" height="92" rx="18" fill="#52677c" stroke={C.ink} strokeWidth="9"/><circle cx="-58" cy="46" r="24" fill={C.red}/><circle cx="0" cy="46" r="24" fill={C.cyan}/><circle cx="58" cy="46" r="24" fill={C.yellow}/><path d="M-20 0V-88Q0-124 20-88V0" fill="none" stroke={C.ink} strokeWidth="10"/></g>
+   <rect x="1470" y="240" width="270" height="480" rx="20" fill="#5b667d" stroke={C.ink} strokeWidth="10"/><rect x="1500" y="270" width="210" height="410" rx="12" fill={door?C.deep:"#b5dce0"}/><circle cx="1535" cy="480" r="12" fill={C.yellow}/>
+   <path d="M230 710H1350L1270 820H300Z" fill="#a66d57" stroke={C.ink} strokeWidth="10"/><path d="M340 820L300 1020M1240 820L1290 1020" stroke={C.ink} strokeWidth="18"/>
+   <rect x="470" y="620" width="310" height="82" rx="14" fill="#29374c" stroke={C.ink} strokeWidth="8"/><rect x="500" y="642" width="250" height="42" rx="8" fill={C.cyan} opacity=".75"/>
+   <circle cx={ballX} cy="610" r="45" fill={C.red} stroke={C.ink} strokeWidth="8"/><path d={`M${ballX-185} 610Q${ballX-105} 560 ${ballX-45} 610`} fill="none" stroke={C.red} strokeWidth="12" opacity=".65"/>
+   <circle cx="1430" cy="850" r="52" fill="#5c7890" stroke={C.ink} strokeWidth="8"/><path d="M1430 798V902M1378 850H1482" stroke={C.yellow} strokeWidth="10"/>
  </g>;
 }
 
 function Eye({scale=1,blind=false}:{scale?:number;blind?:boolean}){
  return <g transform={`scale(${scale})`}>
-   <path d="M-330 0Q0-205 330 0Q0 205-330 0Z" fill={C.paper} stroke={C.ink} strokeWidth="10"/>
-   <circle r="108" fill={C.cyan} stroke={C.ink} strokeWidth="9"/><circle r="53" fill={C.ink}/><circle cx="-18" cy="-20" r="15" fill={C.white}/>
-   {blind&&<circle cx="155" r="42" fill={C.deep} stroke={C.pink} strokeWidth="9" strokeDasharray="12 10"/>}
+   <path d="M-350 0Q0-225 350 0Q0 225-350 0Z" fill="#f7e7dc" stroke={C.ink} strokeWidth="12"/>
+   <path d="M-300 0Q0-180 300 0Q0 180-300 0Z" fill="#e89bb1" opacity=".5"/>
+   <circle r="118" fill="#5ed3df" stroke={C.ink} strokeWidth="11"/><circle r="61" fill="#24223b"/><circle cx="-20" cy="-25" r="18" fill={C.white}/>
+   <path d="M-250 0Q-180-90-90-115M250 0Q180-90 90-115" fill="none" stroke={C.white} strokeWidth="14" opacity=".7"/>
+   {Array.from({length:14},(_,i)=>{const a=-Math.PI*.85+i*Math.PI*1.7/13;return <circle key={i} cx={Math.cos(a)*285} cy={Math.sin(a)*145} r="8" fill={i%2?C.yellow:C.cyan}/>})}
+   {blind&&<g><circle cx="175" r="50" fill={C.deep} stroke={C.pink} strokeWidth="11" strokeDasharray="14 11"/><path d="M145-30L205 30M205-30L145 30" stroke={C.pink} strokeWidth="8"/></g>}
  </g>;
 }
 
 function Retina(){
- const cells=Array.from({length:99},(_,i)=>({x:(i%11)*64-320,y:Math.floor(i/11)*55-245}));
- return <g>
-   <path d="M-390-260Q0-360 390-260L350 260Q0 350-350 260Z" fill="#e66f9c" opacity=".32" stroke={C.paper} strokeWidth="8"/>
-   {cells.map((p,i)=><circle key={i} cx={p.x} cy={p.y} r={i%9===0?22:12} fill={i===54?C.ink:C.cyan} opacity=".8"/>)}
-   <circle cx="260" cy="0" r="62" fill={C.deep} stroke={C.yellow} strokeWidth="9"/>
+ const cells=Array.from({length:150},(_,i)=>({x:(i%15)*58-406,y:Math.floor(i/15)*48-240}));
+ return <g><path d="M-440-280Q0-385 440-280L395 280Q0 385-395 280Z" fill="#cf5d91" stroke={C.paper} strokeWidth="10"/>
+   <path d="M-390-205Q0-315 390-205M-390-80Q0-190 390-80M-390 55Q0-55 390 55M-390 185Q0 80 390 185" fill="none" stroke="#f58ab0" strokeWidth="14" opacity=".55"/>
+   {cells.map((p,i)=><g key={i}><circle cx={p.x} cy={p.y} r={i%11===0?20:10} fill={i%4===0?C.yellow:C.cyan} opacity=".82"/>{i%17===0&&<circle cx={p.x+12} cy={p.y-10} r="5" fill={C.white}/>}</g>)}
+   <circle cx="280" cy="0" r="72" fill={C.deep} stroke={C.yellow} strokeWidth="11"/><path d="M-300 290Q-150 220 0 280T300 270" fill="none" stroke={C.white} strokeWidth="9" opacity=".65"/>
  </g>;
 }
 
@@ -244,7 +258,7 @@ export const Explainer:React.FC=()=>{
  const fi=interpolate(local,[0,28],[0,1],clamp);
  const fo=interpolate(local,[855,899],[1,0],clamp);
  return <AbsoluteFill style={{background:C.ink,overflow:'hidden'}}>
-   <svg width="100%" height="100%" viewBox="0 0 1920 1080">
+   <svg width="100%" height="100%" viewBox="0 0 1920 1080"><defs><filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="14" stdDeviation="12" floodOpacity=".22"/></filter><linearGradient id="spaceGlow" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#131b3a"/><stop offset=".5" stopColor="#30295f"/><stop offset="1" stopColor="#0b1329"/></linearGradient></defs>
      <g opacity={Math.min(fi,fo)}><Scene id={scene} local={local}/></g>
    </svg>
  </AbsoluteFill>;
